@@ -1,6 +1,6 @@
 package nhk.domain
 
-import java.util.*
+import java.util.Date
 
 class NHKTopNews {
     val topPriorityNumber = 0
