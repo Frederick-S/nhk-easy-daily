@@ -1,0 +1,5 @@
+package nhk
+
+class NHKNewsEasyTest {
+
+}
