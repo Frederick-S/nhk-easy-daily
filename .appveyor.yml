@@ -1,0 +1,7 @@
+image: Visual Studio 2017
+build_script:
+  - gradlew.bat build
+before_test:
+  - gradlew.bat ktlint
+test_script:
+  - gradlew.bat test jacocoTestReport
