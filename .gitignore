@@ -107,3 +107,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 application-dev.yml
+!gradle-wrapper.jar
