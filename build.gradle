@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
     ktlint "com.github.shyiko:ktlint:0.29.0"
 }
 
