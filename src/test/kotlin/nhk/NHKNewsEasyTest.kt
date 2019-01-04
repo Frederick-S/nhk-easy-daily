@@ -6,7 +6,7 @@ import org.junit.Test
 class NHKNewsEasyTest {
     @Test
     fun shouldGetTopNewsForToday() {
-        val topNews = NHKNewsEasy.getTopNewsForToday()
+        val topNews = NHKNewsEasy.getTopNews()
 
         Assert.assertTrue(topNews.isNotEmpty())
     }

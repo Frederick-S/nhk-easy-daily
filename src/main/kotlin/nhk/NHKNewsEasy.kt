@@ -7,10 +7,9 @@ import nhk.domain.NHKTopNews
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.text.SimpleDateFormat
-import java.util.*
 
 object NHKNewsEasy {
-    fun getTopNewsForToday(): List<NHKTopNews> {
+    fun getTopNews(): List<NHKTopNews> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
                 .url(Constants.TOP_NEWS_URL)
@@ -19,19 +18,11 @@ object NHKNewsEasy {
         val json = response.body()?.string()
 
         json?.let {
-            val utcNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             val objectMapper = ObjectMapper()
             objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-            objectMapper.dateFormat = SimpleDateFormat("yyyy-dd-MM hh:mm:ss")
+            objectMapper.dateFormat = SimpleDateFormat(Constants.NHK_NEWS_EASY_DATE_FORMAT)
 
-            return objectMapper.readValue<List<NHKTopNews>>(it)
-                    .filter { topNews ->
-                        val publishedDateUtc = Calendar.getInstance()
-                        publishedDateUtc.time = topNews.newsPrearrangedTime
-                        publishedDateUtc.add(Calendar.HOUR, -9)
-
-                        utcNow.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
-                    }
+            return objectMapper.readValue(it)
         }
 
         return emptyList()
