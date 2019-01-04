@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.text.SimpleDateFormat
 
-object NHKNewsEasy {
+object NHKNewsEasyClient {
     fun getTopNews(): List<NHKTopNews> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()

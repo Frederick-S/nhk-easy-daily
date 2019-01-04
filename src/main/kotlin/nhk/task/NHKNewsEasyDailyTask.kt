@@ -1,11 +1,11 @@
 package nhk.task
 
-import nhk.NHKNewsEasy
+import nhk.NHKNewsEasyClient
 import java.util.*
 
 class NHKNewsEasyDailyTask {
     fun getTopNewsForToday() {
-        val topNews = NHKNewsEasy.getTopNews()
+        val topNews = NHKNewsEasyClient.getTopNews()
         val utcNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         val topNewsForToday = topNews.filter {
             val publishedDateUtc = Calendar.getInstance()

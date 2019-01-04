@@ -3,10 +3,10 @@ package nhk
 import org.junit.Assert
 import org.junit.Test
 
-class NHKNewsEasyTest {
+class NHKNewsEasyClientTest {
     @Test
     fun shouldGetTopNewsForToday() {
-        val topNews = NHKNewsEasy.getTopNews()
+        val topNews = NHKNewsEasyClient.getTopNews()
 
         Assert.assertTrue(topNews.isNotEmpty())
     }
