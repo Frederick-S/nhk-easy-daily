@@ -1,7 +1,8 @@
 package nhk.task
 
 import nhk.NHKNewsEasyClient
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 
 class NHKNewsEasyDailyTask {
     fun getTopNewsForToday() {
