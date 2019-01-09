@@ -13,8 +13,8 @@ class NHKNewsEasyClientTest {
 
     @Test
     fun shouldParseNews() {
-        val url = "https://www3.nhk.or.jp/news/easy/k10011770571000/k10011770571000.html"
-        val news = NHKNewsEasyClient.parseNews(url)
+        val topNews = NHKNewsEasyClient.getTopNews()
+        val news = NHKNewsEasyClient.parseNews(topNews[0])
 
         Assert.assertNotNull(news)
     }

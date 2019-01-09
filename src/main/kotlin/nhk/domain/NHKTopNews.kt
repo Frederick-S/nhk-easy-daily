@@ -40,6 +40,4 @@ class NHKTopNews {
     var newsEasyMovieUri = ""
 
     var newsEasyVoiceUri = ""
-
-    var url = ""
 }

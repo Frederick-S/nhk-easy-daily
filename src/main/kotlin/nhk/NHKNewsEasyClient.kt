@@ -24,20 +24,26 @@ object NHKNewsEasyClient {
             objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
             objectMapper.dateFormat = SimpleDateFormat(Constants.NHK_NEWS_EASY_DATE_FORMAT)
 
-            return objectMapper.readValue<List<NHKTopNews>>(it)
-                    .map { nhkTopNews ->
-                        nhkTopNews.url = "https://www3.nhk.or.jp/news/easy/${nhkTopNews.newsId}/${nhkTopNews.newsId}.html"
-
-                        nhkTopNews
-                    }
+            return objectMapper.readValue(it)
         }
 
         return emptyList()
     }
 
-    fun parseNews(url: String): NHKNews {
+    fun parseNews(nhkTopNews: NHKTopNews): NHKNews {
+        val url = "https://www3.nhk.or.jp/news/easy/${nhkTopNews.newsId}/${nhkTopNews.newsId}.html"
         val document = Jsoup.connect(url).get()
+        val body = document.getElementById("js-article-body")
+        val content = body.html()
 
-        return NHKNews()
+        val nhkNews = NHKNews()
+        nhkNews.title = nhkTopNews.title
+        nhkNews.titleWithRuby = nhkTopNews.titleWithRuby
+        nhkNews.outlineWithRuby = nhkTopNews.outlineWithRuby
+        nhkNews.url = url
+        nhkNews.body = content
+        nhkNews.imageUrl = nhkTopNews.newsWebImageUri
+
+        return nhkNews
     }
 }
