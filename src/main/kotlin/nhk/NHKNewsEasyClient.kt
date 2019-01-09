@@ -24,7 +24,12 @@ object NHKNewsEasyClient {
             objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
             objectMapper.dateFormat = SimpleDateFormat(Constants.NHK_NEWS_EASY_DATE_FORMAT)
 
-            return objectMapper.readValue(it)
+            return objectMapper.readValue<List<NHKTopNews>>(it)
+                    .map { nhkTopNews ->
+                        nhkTopNews.url = "https://www3.nhk.or.jp/news/easy/%s/%s.html".format(nhkTopNews.newsId)
+
+                        nhkTopNews
+                    }
         }
 
         return emptyList()

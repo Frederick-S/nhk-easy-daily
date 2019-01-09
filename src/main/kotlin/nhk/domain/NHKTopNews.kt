@@ -3,41 +3,43 @@ package nhk.domain
 import java.util.Date
 
 class NHKTopNews {
-    val topPriorityNumber = 0
+    var topPriorityNumber = 0
 
-    val topDisplayFlag = false
+    var topDisplayFlag = false
 
-    val newsId = ""
+    var newsId = ""
 
-    val newsPrearrangedTime = Date()
+    var newsPrearrangedTime = Date()
 
-    val title = ""
+    var title = ""
 
-    val titleWithRuby = ""
+    var titleWithRuby = ""
 
-    val outlineWithRuby = ""
+    var outlineWithRuby = ""
 
-    val newsFileVer = false
+    var newsFileVer = false
 
-    val newsPublicationStatus = false
+    var newsPublicationStatus = false
 
-    val hasNewsWebImage = false
+    var hasNewsWebImage = false
 
-    val hasNewsWebMovie = false
+    var hasNewsWebMovie = false
 
-    val hasNewsEasyImage = false
+    var hasNewsEasyImage = false
 
-    val hasNewsEasyMovie = false
+    var hasNewsEasyMovie = false
 
-    val hasNewsEasyVoice = false
+    var hasNewsEasyVoice = false
 
-    val newsWebImageUri = ""
+    var newsWebImageUri = ""
 
-    val newsWebMovieUri = ""
+    var newsWebMovieUri = ""
 
-    val newsEasyImageUri = ""
+    var newsEasyImageUri = ""
 
-    val newsEasyMovieUri = ""
+    var newsEasyMovieUri = ""
 
-    val newsEasyVoiceUri = ""
+    var newsEasyVoiceUri = ""
+
+    var url = ""
 }

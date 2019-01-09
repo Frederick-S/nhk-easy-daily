@@ -1,11 +1,13 @@
 package nhk.domain
 
 class NHKNews {
-    val title: String = ""
+    var title = ""
 
-    val body: String = ""
+    var body = ""
 
-    val m3u8Url: String = ""
+    var url = ""
 
-    val words: List<Word> = emptyList()
+    var m3u8Url = ""
+
+    var words: List<Word> = emptyList()
 }
