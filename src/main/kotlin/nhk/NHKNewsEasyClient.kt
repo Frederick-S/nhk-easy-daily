@@ -43,6 +43,7 @@ object NHKNewsEasyClient {
         nhkNews.url = url
         nhkNews.body = content
         nhkNews.imageUrl = nhkTopNews.newsWebImageUri
+        nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
 
         return nhkNews
     }
