@@ -26,7 +26,7 @@ object NHKNewsEasyClient {
 
             return objectMapper.readValue<List<NHKTopNews>>(it)
                     .map { nhkTopNews ->
-                        nhkTopNews.url = "https://www3.nhk.or.jp/news/easy/%s/%s.html".format(nhkTopNews.newsId)
+                        nhkTopNews.url = "https://www3.nhk.or.jp/news/easy/${nhkTopNews.newsId}/${nhkTopNews.newsId}.html"
 
                         nhkTopNews
                     }
