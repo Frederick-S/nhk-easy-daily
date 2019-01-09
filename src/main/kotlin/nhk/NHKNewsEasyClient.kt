@@ -7,6 +7,7 @@ import nhk.domain.NHKNews
 import nhk.domain.NHKTopNews
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.jsoup.Jsoup
 import java.text.SimpleDateFormat
 
 object NHKNewsEasyClient {
@@ -30,6 +31,8 @@ object NHKNewsEasyClient {
     }
 
     fun parseNews(url: String): NHKNews {
+        val document = Jsoup.connect(url).get()
+
         return NHKNews()
     }
 }
