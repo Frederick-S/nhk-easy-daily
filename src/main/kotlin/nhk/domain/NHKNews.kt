@@ -1,5 +1,6 @@
 package nhk.domain
 
+import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -24,4 +25,6 @@ class NHKNews {
     var m3u8Url = ""
 
     var imageUrl = ""
+
+    var publishedAt = Date()
 }
