@@ -1,16 +1,41 @@
-package nhk
+package nhk.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.readValue
+import nhk.Constants
 import nhk.domain.NHKNews
 import nhk.domain.NHKTopNews
+import nhk.repository.NHKNewsRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
+import java.util.Calendar
 
-object NHKNewsEasyClient {
+@Service
+class NHKNewsService {
+    val logger = LoggerFactory.getLogger(NHKNewsService::class.java)
+
+    @Autowired
+    lateinit var nhkNewsRepository: NHKNewsRepository
+
+    fun saveTopNewsOf(utcDate: Calendar) {
+        val topNews = getTopNews()
+        val newsForToday = topNews.filter {
+            val publishedDateUtc = Calendar.getInstance()
+            publishedDateUtc.time = it.newsPrearrangedTime
+            publishedDateUtc.add(Calendar.HOUR, -9)
+
+            utcDate.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
+        }.map { parseNews(it) }
+
+        newsForToday.forEach { nhkNewsRepository.save(it) }
+    }
+
     fun getTopNews(): List<NHKTopNews> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()

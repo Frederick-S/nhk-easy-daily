@@ -1,20 +1,25 @@
 package nhk
 
+import nhk.service.NHKNewsService
 import org.junit.Assert
 import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 
-class NHKNewsEasyClientTest {
+class NHKNewsEasyClientTest : BaseTest() {
+    @Autowired
+    lateinit var nhkNewsService: NHKNewsService
+
     @Test
     fun shouldGetTopNewsForToday() {
-        val topNews = NHKNewsEasyClient.getTopNews()
+        val topNews = nhkNewsService.getTopNews()
 
         Assert.assertTrue(topNews.isNotEmpty())
     }
 
     @Test
     fun shouldParseNews() {
-        val topNews = NHKNewsEasyClient.getTopNews()
-        val news = NHKNewsEasyClient.parseNews(topNews[0])
+        val topNews = nhkNewsService.getTopNews()
+        val news = nhkNewsService.parseNews(topNews[0])
 
         Assert.assertNotNull(news)
     }

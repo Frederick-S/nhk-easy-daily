@@ -1,7 +1,6 @@
 package nhk.task
 
-import nhk.NHKNewsEasyClient
-import nhk.repository.NHKNewsRepository
+import nhk.service.NHKNewsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -14,20 +13,12 @@ class NHKNewsEasyDailyTask {
     val logger = LoggerFactory.getLogger(NHKNewsEasyDailyTask::class.java)
 
     @Autowired
-    lateinit var nhkNewsRepository: NHKNewsRepository
+    lateinit var nhkNewsService: NHKNewsService
 
     @Scheduled(cron = "*/10 * * * * *")
-    fun getTopNewsForToday() {
-        val topNews = NHKNewsEasyClient.getTopNews()
+    fun saveTopNewsForToday() {
         val utcNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        val newsForToday = topNews.filter {
-            val publishedDateUtc = Calendar.getInstance()
-            publishedDateUtc.time = it.newsPrearrangedTime
-            publishedDateUtc.add(Calendar.HOUR, -9)
 
-            utcNow.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
-        }.map { NHKNewsEasyClient.parseNews(it) }
-
-        newsForToday.forEach { nhkNewsRepository.save(it) }
+        nhkNewsService.saveTopNewsOf(utcNow)
     }
 }
