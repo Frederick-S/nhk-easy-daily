@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
+import nhk.DateUtil
 import nhk.domain.NHKNews
 import nhk.domain.NHKTopNews
 import nhk.repository.NHKNewsRepository
@@ -26,9 +27,7 @@ class NHKNewsService {
     fun saveTopNewsOf(utcDate: Calendar) {
         val topNews = getTopNews()
         val newsForToday = topNews.filter {
-            val publishedDateUtc = Calendar.getInstance()
-            publishedDateUtc.time = it.newsPrearrangedTime
-            publishedDateUtc.add(Calendar.HOUR, -9)
+            val publishedDateUtc = DateUtil.nhkDateToUtc(it.newsPrearrangedTime)
 
             utcDate.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
         }.map { parseNews(it) }
@@ -69,7 +68,7 @@ class NHKNewsService {
         nhkNews.body = content
         nhkNews.imageUrl = nhkTopNews.newsWebImageUri
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
-        nhkNews.publishedAt = nhkTopNews.newsPrearrangedTime
+        nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).time
 
         return nhkNews
     }

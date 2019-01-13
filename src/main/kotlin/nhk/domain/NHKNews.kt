@@ -26,5 +26,5 @@ class NHKNews {
 
     var imageUrl = ""
 
-    var publishedAt = Date()
+    var publishedAtUtc = Date()
 }
