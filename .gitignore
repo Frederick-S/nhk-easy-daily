@@ -109,3 +109,4 @@ fabric.properties
 application-dev.yml
 !gradle-wrapper.jar
 *.iml
+*.db

@@ -1,6 +1,16 @@
 package nhk.domain
 
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+
+@Entity
 class NHKNews {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id = 0
+
     var title = ""
 
     var titleWithRuby = ""
@@ -14,6 +24,4 @@ class NHKNews {
     var m3u8Url = ""
 
     var imageUrl = ""
-
-    var words: List<Word> = emptyList()
 }

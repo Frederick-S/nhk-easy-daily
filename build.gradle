@@ -44,6 +44,8 @@ configurations {
 }
 
 dependencies {
+    implementation 'org.xerial:sqlite-jdbc:3.25.2'
+    implementation 'com.github.gwenn:sqlite-dialect:0.1.0'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -51,6 +53,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
     ktlint "com.github.shyiko:ktlint:0.29.0"
 }
