@@ -6,7 +6,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class NHKNewsEasyClientTest : BaseTest() {
+class NHKNewsServiceTest : BaseTest() {
     @Autowired
     lateinit var nhkNewsService: NHKNewsService
 
