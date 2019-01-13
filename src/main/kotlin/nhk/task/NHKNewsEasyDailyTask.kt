@@ -15,7 +15,7 @@ class NHKNewsEasyDailyTask {
     @Autowired
     lateinit var nhkNewsService: NHKNewsService
 
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0 23 ? * * *")
     fun saveTopNewsForToday() {
         val utcNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
 
