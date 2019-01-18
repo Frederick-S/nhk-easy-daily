@@ -110,3 +110,4 @@ application-dev.yml
 !gradle-wrapper.jar
 *.iml
 *.db
+*.gz

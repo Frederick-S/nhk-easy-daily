@@ -11,6 +11,7 @@ import nhk.repository.NHKNewsRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ import java.util.Calendar
 
 @Service
 class NHKNewsService {
-    val logger = LoggerFactory.getLogger(NHKNewsService::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(NHKNewsService::class.java)
 
     @Autowired
     lateinit var nhkNewsRepository: NHKNewsRepository
