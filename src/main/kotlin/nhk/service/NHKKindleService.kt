@@ -5,6 +5,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import nhk.domain.NHKNews
+import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -29,7 +30,7 @@ class NHKKindleService {
         textPart.setContent("NHK Easy", "text/plain; charset=UTF-8")
 
         val attachment = MimeBodyPart()
-        val byteArrayDataSource = ByteArrayDataSource("１７日にち、６４３４人にんが亡なくなった阪神はんしん・淡路大震災あわじだいしんさいから２４年ねんになりました。", "text/html")
+        val byteArrayDataSource = ByteArrayDataSource(getAttachmentContent(nhkNews), "text/html")
         attachment.dataHandler = DataHandler(byteArrayDataSource)
         attachment.fileName = "${nhkNews.title}.html"
 
@@ -61,5 +62,11 @@ class NHKKindleService {
         } catch (e: Exception) {
             logger.error("Send to kindle error", e)
         }
+    }
+
+    private fun getAttachmentContent(nhkNews: NHKNews): String {
+        val document = Jsoup.parse(nhkNews.body)
+
+        return document.text()
     }
 }
