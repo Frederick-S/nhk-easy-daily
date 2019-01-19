@@ -66,6 +66,11 @@ class NHKKindleService {
 
     private fun getAttachmentContent(nhkNews: NHKNews): String {
         val document = Jsoup.parse(nhkNews.body)
+        val rubies = document.select("ruby")
+
+        rubies.forEach {
+            it.select("rt").remove()
+        }
 
         return document.text()
     }
