@@ -57,12 +57,14 @@ class NHKNewsService {
     }
 
     fun parseNews(nhkTopNews: NHKTopNews): NHKNews {
-        val url = "https://www3.nhk.or.jp/news/easy/${nhkTopNews.newsId}/${nhkTopNews.newsId}.html"
+        val newsId = nhkTopNews.newsId
+        val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.html"
         val document = Jsoup.connect(url).get()
         val body = document.getElementById("js-article-body")
         val content = body.html()
 
         val nhkNews = NHKNews()
+        nhkNews.newsId = newsId
         nhkNews.title = nhkTopNews.title
         nhkNews.titleWithRuby = nhkTopNews.titleWithRuby
         nhkNews.outlineWithRuby = nhkTopNews.outlineWithRuby
@@ -71,6 +73,7 @@ class NHKNewsService {
         nhkNews.imageUrl = nhkTopNews.newsWebImageUri
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
         nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).time
+        nhkNews.words = parseWords(newsId)
 
         return nhkNews
     }

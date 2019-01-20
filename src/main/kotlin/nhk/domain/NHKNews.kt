@@ -5,12 +5,15 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Transient
 
 @Entity
 class NHKNews {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id = 0
+
+    var newsId = ""
 
     var title = ""
 
@@ -27,4 +30,7 @@ class NHKNews {
     var imageUrl = ""
 
     var publishedAtUtc = Date()
+
+    @Transient
+    var words = emptyList<Word>()
 }
