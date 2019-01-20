@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springVersion = "2.1.1.RELEASE"
+        springVersion = "2.1.2.RELEASE"
     }
 
     dependencies {
@@ -45,7 +45,7 @@ configurations {
 
 dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.484'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.486'
     implementation 'org.xerial:sqlite-jdbc:3.25.2'
     implementation 'com.github.gwenn:sqlite-dialect:0.1.0'
     implementation 'org.jsoup:jsoup:1.11.3'
