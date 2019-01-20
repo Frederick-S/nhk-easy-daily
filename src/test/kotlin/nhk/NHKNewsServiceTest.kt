@@ -29,6 +29,13 @@ class NHKNewsServiceTest : BaseTest() {
     }
 
     @Test
+    fun shouldParseNewsWords() {
+        val words = nhkNewsService.parseWords("k10011781211000")
+
+        Assert.assertTrue(words.isNotEmpty())
+    }
+
+    @Test
     fun shouldSaveTopNewsForSpecifiedDate() {
         val topNews = nhkNewsService.getTopNews()
         val calendar = DateUtil.nhkDateToUtc(topNews[0].newsPrearrangedTime)

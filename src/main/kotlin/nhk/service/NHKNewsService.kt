@@ -7,6 +7,7 @@ import nhk.Constants
 import nhk.DateUtil
 import nhk.domain.NHKNews
 import nhk.domain.NHKTopNews
+import nhk.domain.Word
 import nhk.repository.NHKNewsRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -72,5 +73,35 @@ class NHKNewsService {
         nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).time
 
         return nhkNews
+    }
+
+    fun parseWords(newsId: String): List<Word> {
+        val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.out.dic"
+        val okHttpClient = OkHttpClient()
+        val request = Request.Builder()
+                .url(url)
+                .build()
+        val response = okHttpClient.newCall(request).execute()
+        val json = response.body()?.string()
+
+        json?.let {
+            val objectMapper = ObjectMapper()
+            val root = objectMapper.readTree(it)
+            val reikai = root.get("reikai")
+            val entries = reikai.get("entries")
+
+            return entries.flatMap { entry ->
+                entry.toList()
+                        .map { w ->
+                            val word = Word()
+                            word.name = w.get("def").asText()
+                            word.definition = w.get("hyouki")[0].asText()
+
+                            word
+                        }
+            }
+        }
+
+        return emptyList()
     }
 }
