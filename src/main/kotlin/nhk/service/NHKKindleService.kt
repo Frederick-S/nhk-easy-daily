@@ -66,11 +66,15 @@ class NHKKindleService {
 
     private fun getAttachmentContent(nhkNews: NHKNews): String {
         val document = Jsoup.parse(nhkNews.body)
-        val rubies = document.select("ruby")
+        val paragraphs = document.select("p")
 
-        rubies.forEach {
+        paragraphs.forEach {
             it.select("rt").remove()
         }
+
+        val content = paragraphs.map {
+            "<p>${it.text()}</p>"
+        }.joinToString("")
 
         return """
             <!DOCTYPE html>
@@ -81,7 +85,7 @@ class NHKKindleService {
                 </head>
                 <body>
                     <h1 style="text-align: center;">${nhkNews.title}</h1>
-                    <p>${document.text()}</p>
+                    $content
                 </body>
             </html>
         """.trimIndent()
