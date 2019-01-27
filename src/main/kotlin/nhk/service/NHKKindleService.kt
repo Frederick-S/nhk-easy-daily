@@ -25,7 +25,7 @@ import javax.mail.util.ByteArrayDataSource
 class NHKKindleService {
     private val logger: Logger = LoggerFactory.getLogger(NHKKindleService::class.java)
 
-    fun sendToKindle(nhkNews: NHKNews, mailTo: String) {
+    fun sendToKindle(nhkNews: NHKNews, mailFrom: String, mailTo: String) {
         val textPart = MimeBodyPart()
         textPart.setContent("NHK Easy", "text/plain; charset=UTF-8")
 
@@ -41,7 +41,7 @@ class NHKKindleService {
         val session = Session.getDefaultInstance(Properties())
         val message = MimeMessage(session)
         message.setSubject("NHK", Charsets.UTF_8.displayName())
-        message.setFrom(InternetAddress("mao_xiaodan@hotmail.com"))
+        message.setFrom(InternetAddress(mailFrom))
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo))
         message.setContent(mixedPart)
 
