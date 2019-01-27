@@ -72,9 +72,9 @@ class NHKKindleService {
             it.select("rt").remove()
         }
 
-        val content = paragraphs.map {
+        val content = paragraphs.joinToString(separator = "") {
             "<p>${it.text()}</p>"
-        }.joinToString("")
+        }
 
         return """
             <!DOCTYPE html>
