@@ -16,8 +16,8 @@ class NHKKindleServiceTest : BaseTest() {
     fun shouldSendToKindle() {
         val topNews = nhkNewsService.getTopNews()
         val news = nhkNewsService.parseNews(topNews[0])
-        val mailFrom = System.getenv("NHK_SENDER_MAIL_ADDRESS") ?: ""
-        val mailTo = "mao_xiaodan@kindle.cn"
+        val mailFrom = System.getenv("NHK_MAIL_FROM_ADDRESS") ?: ""
+        val mailTo = System.getenv("NHK_MAIL_TO_ADDRESS") ?: ""
 
         nhkKindleService.sendToKindle(news, mailFrom, mailTo)
     }
