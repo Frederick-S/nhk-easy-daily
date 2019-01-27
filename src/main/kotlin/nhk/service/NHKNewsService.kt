@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
 import nhk.DateUtil
-import nhk.domain.NHKNews
+import nhk.entity.NHKNews
 import nhk.domain.NHKTopNews
-import nhk.domain.Word
+import nhk.entity.Word
 import nhk.repository.NHKNewsRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request

@@ -1,18 +1,11 @@
-package nhk.domain
+package nhk.entity
 
 import java.util.Date
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 import javax.persistence.Transient
 
 @Entity
-class NHKNews {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id = 0
-
+class NHKNews : BaseEntity() {
     var newsId = ""
 
     var title = ""

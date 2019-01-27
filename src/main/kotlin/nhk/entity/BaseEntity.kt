@@ -1,17 +1,13 @@
-package nhk.domain
+package nhk.entity
 
-import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.MappedSuperclass
 
-@Entity
-class Word {
+@MappedSuperclass
+open class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id = 0
-
-    var name = ""
-
-    var definition = ""
 }

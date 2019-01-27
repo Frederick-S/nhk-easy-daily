@@ -4,7 +4,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
-import nhk.domain.NHKNews
+import nhk.entity.NHKNews
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
