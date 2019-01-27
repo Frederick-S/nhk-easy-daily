@@ -40,7 +40,7 @@ class NHKKindleService {
 
         val session = Session.getDefaultInstance(Properties())
         val message = MimeMessage(session)
-        message.setSubject("NHK", "UTF-8")
+        message.setSubject("NHK", Charsets.UTF_8.displayName())
         message.setFrom(InternetAddress("mao_xiaodan@hotmail.com"))
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo))
         message.setContent(mixedPart)
@@ -72,6 +72,18 @@ class NHKKindleService {
             it.select("rt").remove()
         }
 
-        return document.text()
+        return """
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    <title>${nhkNews.title}</title>
+                </head>
+                <body>
+                    <h1 style="text-align: center;">${nhkNews.title}</h1>
+                    <p>${document.text()}</p>
+                </body>
+            </html>
+        """.trimIndent()
     }
 }
