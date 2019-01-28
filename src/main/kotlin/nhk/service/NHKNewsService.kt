@@ -9,6 +9,7 @@ import nhk.entity.NHKNews
 import nhk.domain.NHKTopNews
 import nhk.entity.Word
 import nhk.repository.NHKNewsRepository
+import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
@@ -26,6 +27,9 @@ class NHKNewsService {
     @Autowired
     lateinit var nhkNewsRepository: NHKNewsRepository
 
+    @Autowired
+    lateinit var wordRepository: WordRepository
+
     fun saveTopNewsOf(utcDate: Calendar) {
         val topNews = getTopNews()
         val newsForToday = topNews.filter {
@@ -34,7 +38,17 @@ class NHKNewsService {
             utcDate.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
         }.map { parseNews(it) }
 
-        newsForToday.forEach { nhkNewsRepository.save(it) }
+        newsForToday.forEach {
+            nhkNewsRepository.save(it)
+
+            it.words.forEach { word ->
+                val words = wordRepository.findByName(word.name)
+
+                if (words.isEmpty()) {
+                    wordRepository.save(word)
+                }
+            }
+        }
     }
 
     fun getTopNews(): List<NHKTopNews> {
