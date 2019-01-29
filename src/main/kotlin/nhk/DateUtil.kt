@@ -8,7 +8,6 @@ object DateUtil {
     fun nhkDateToUtc(nhkDate: Date): Calendar {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone(Constants.TIME_ZONE_UTC))
         calendar.time = nhkDate
-        calendar.add(Calendar.HOUR, -9)
 
         return calendar
     }
