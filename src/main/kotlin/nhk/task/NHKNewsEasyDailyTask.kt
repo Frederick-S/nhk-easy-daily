@@ -1,5 +1,6 @@
 package nhk.task
 
+import nhk.Constants
 import nhk.service.NHKNewsService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,7 +19,7 @@ class NHKNewsEasyDailyTask {
 
     @Scheduled(cron = "0 0 23 * * *")
     fun saveTopNewsForToday() {
-        val utcNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val utcNow = Calendar.getInstance(TimeZone.getTimeZone(Constants.TIME_ZONE_UTC))
 
         nhkNewsService.saveTopNewsOf(utcNow)
     }
