@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
 import nhk.DateUtil
-import nhk.entity.NHKNews
 import nhk.domain.NHKTopNews
+import nhk.entity.NHKNews
 import nhk.entity.Word
 import nhk.repository.NHKNewsRepository
 import nhk.repository.WordRepository
@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.time.ZonedDateTime
+import java.util.TimeZone
 
 @Service
 class NHKNewsService {
@@ -30,12 +31,12 @@ class NHKNewsService {
     @Autowired
     lateinit var wordRepository: WordRepository
 
-    fun saveTopNewsOf(utcDate: Calendar) {
+    fun saveTopNewsOf(utcDate: ZonedDateTime) {
         val topNews = getTopNews()
         val newsForToday = topNews.filter {
             val publishedDateUtc = DateUtil.nhkDateToUtc(it.newsPrearrangedTime)
 
-            utcDate.get(Calendar.DAY_OF_MONTH) == publishedDateUtc.get(Calendar.DAY_OF_MONTH)
+            utcDate.dayOfMonth == publishedDateUtc.dayOfMonth
         }.map { parseNews(it) }
 
         newsForToday.forEach {
@@ -63,6 +64,7 @@ class NHKNewsService {
             val objectMapper = ObjectMapper()
             objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
             objectMapper.dateFormat = SimpleDateFormat(Constants.NHK_NEWS_EASY_DATE_FORMAT)
+            objectMapper.setTimeZone(TimeZone.getTimeZone("JST"))
 
             return objectMapper.readValue(it)
         }
@@ -86,7 +88,7 @@ class NHKNewsService {
         nhkNews.body = content
         nhkNews.imageUrl = nhkTopNews.newsWebImageUri
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
-        nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).time
+        nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).toInstant()
         nhkNews.words = parseWords(newsId)
 
         return nhkNews
@@ -111,8 +113,8 @@ class NHKNewsService {
                 entry.toList()
                         .map { w ->
                             val word = Word()
-                            word.name = w.get("def").asText()
-                            word.definition = w.get("hyouki")[0].asText()
+                            word.name = w.get("hyouki")[0].asText()
+                            word.definition = w.get("def").asText()
 
                             word
                         }

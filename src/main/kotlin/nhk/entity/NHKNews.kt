@@ -1,6 +1,6 @@
 package nhk.entity
 
-import java.util.Date
+import java.time.Instant
 import javax.persistence.Entity
 import javax.persistence.Transient
 
@@ -22,7 +22,7 @@ class NHKNews : BaseEntity() {
 
     var imageUrl = ""
 
-    var publishedAtUtc = Date()
+    var publishedAtUtc = Instant.now()
 
     @Transient
     var words = emptyList<Word>()

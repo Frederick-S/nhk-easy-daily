@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.Calendar
-import java.util.TimeZone
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Component
 class NHKNewsEasyDailyTask {
@@ -17,9 +17,9 @@ class NHKNewsEasyDailyTask {
     @Autowired
     lateinit var nhkNewsService: NHKNewsService
 
-    @Scheduled(cron = "0 0 23 * * *")
+    @Scheduled(cron = "0/10 * * * * *")
     fun saveTopNewsForToday() {
-        val utcNow = Calendar.getInstance(TimeZone.getTimeZone(Constants.TIME_ZONE_UTC))
+        val utcNow = ZonedDateTime.now(ZoneId.of(Constants.TIME_ZONE_UTC))
 
         nhkNewsService.saveTopNewsOf(utcNow)
     }
