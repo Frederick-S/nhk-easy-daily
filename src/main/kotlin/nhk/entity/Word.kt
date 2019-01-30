@@ -7,4 +7,6 @@ class Word : BaseEntity() {
     var name = ""
 
     var definition = ""
+
+    var definitionWithRuby = ""
 }

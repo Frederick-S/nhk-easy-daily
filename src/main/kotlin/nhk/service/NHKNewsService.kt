@@ -114,7 +114,7 @@ class NHKNewsService {
                         .map { w ->
                             val word = Word()
                             word.name = w.get("hyouki")[0].asText()
-                            word.definition = w.get("def").asText()
+                            word.definitionWithRuby = w.get("def").asText()
 
                             word
                         }
