@@ -38,9 +38,9 @@ class NHKNewsServiceTest : BaseTest() {
     @Test
     fun shouldSaveTopNewsForSpecifiedDate() {
         val topNews = nhkNewsService.getTopNews()
-        val calendar = DateUtil.nhkDateToUtc(topNews[0].newsPrearrangedTime)
+        val date = DateUtil.nhkDateToUtc(topNews[0].newsPrearrangedTime)
 
-        nhkNewsService.saveTopNewsOf(calendar)
+        nhkNewsService.saveTopNewsOf(date)
 
         val allNews = nhkNewsRepository.findAll().toList()
 
