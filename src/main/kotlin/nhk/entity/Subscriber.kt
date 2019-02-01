@@ -5,6 +5,6 @@ import javax.persistence.Entity
 
 @Entity
 class Subscriber : BaseEntity() {
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     var mailAddress = ""
 }
