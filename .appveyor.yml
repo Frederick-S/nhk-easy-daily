@@ -6,6 +6,7 @@ services:
 build_script:
   - gradlew.bat build
 before_test:
+  - mysql -e "create database nhk_test;" --user=root
   - gradlew.bat ktlint
 test_script:
   - gradlew.bat test jacocoTestReport
