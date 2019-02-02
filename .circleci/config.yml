@@ -3,9 +3,12 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:8-jdk
-      - image: tkuchiki/delayed-mysql
+      - image: circleci/mysql
         environment:
-          MYSQL_ROOT_PASSWORD: '123456'
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_ROOT_HOST: %
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: 123456
 
     working_directory: ~/repo
 
