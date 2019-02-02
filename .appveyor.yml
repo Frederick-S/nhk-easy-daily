@@ -10,4 +10,4 @@ build_script:
 before_test:
   - gradlew.bat ktlint
 test_script:
-  - gradlew.bat test --stacktrace jacocoTestReport
+  - gradlew.bat test jacocoTestReport
