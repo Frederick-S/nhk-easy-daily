@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 environment:
-  MYSQL_ROOT_PASSWORD: 123456
+  MYSQL_ROOT_PASSWORD: Password12!
 services:
   - mysql
 build_script:
