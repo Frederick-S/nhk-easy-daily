@@ -4,7 +4,7 @@ environment:
 install:
   - choco install mysql
 before_build:
-  - set PATH=%PATH%;C:\Program Files\MySql\MySQL Server 8\bin
+  - set PATH=%PATH%;C:\tools\mysql\bin
   - mysql -e "create database nhk_test;" --user=root
 build_script:
   - gradlew.bat build
