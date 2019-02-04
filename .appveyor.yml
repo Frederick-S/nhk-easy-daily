@@ -5,6 +5,10 @@ install:
   - choco install mysql
 before_build:
   - set PATH=%PATH%;C:\tools\mysql\current\bin
+  - mysql stop
+  - mysqld_safe --skip-grant-tables &
+  - mysql -e "update user set authentication_string=PASSWORD("123456") where User='root'; flush privileges;" --user=root
+  - mysql start
   - mysql -e "create database nhk_test;" --user=root
 build_script:
   - gradlew.bat build
