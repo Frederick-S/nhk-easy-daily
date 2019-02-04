@@ -4,6 +4,7 @@ environment:
 install:
   - choco install mysql
 before_build:
+  - ls C:\tools\mysql
   - set PATH=%PATH%;C:\tools\mysql\bin
   - mysql -e "create database nhk_test;" --user=root
 build_script:
