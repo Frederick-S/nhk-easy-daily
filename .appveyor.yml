@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 environment:
-  MYSQL_PWD: Password12!
+  MYSQL_PWD: 123456
 install:
   - choco install mysql
 before_build:
