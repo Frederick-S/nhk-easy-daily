@@ -4,8 +4,7 @@ environment:
 install:
   - choco install mysql
 before_build:
-  - ls C:\tools\mysql
-  - set PATH=%PATH%;C:\tools\mysql\bin
+  - set PATH=%PATH%;C:\tools\mysql\current\bin
   - mysql -e "create database nhk_test;" --user=root
 build_script:
   - gradlew.bat build
