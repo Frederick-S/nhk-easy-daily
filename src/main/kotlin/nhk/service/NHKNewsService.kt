@@ -115,6 +115,7 @@ class NHKNewsService {
                             val word = Word()
                             word.name = w.get("hyouki")[0].asText()
                             word.definitionWithRuby = w.get("def").asText()
+                            word.definition = this.extractWordDefinition(word.definitionWithRuby)
 
                             word
                         }
@@ -122,5 +123,16 @@ class NHKNewsService {
         }
 
         return emptyList()
+    }
+
+    private fun extractWordDefinition(definitionWithRuby: String): String {
+        val document = Jsoup.parse(definitionWithRuby)
+        val rubies = document.select("ruby")
+
+        rubies.forEach {
+            it.select("rt").remove()
+        }
+
+        return document.text()
     }
 }
