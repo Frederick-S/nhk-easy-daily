@@ -1,8 +1,8 @@
 package nhk.repository
 
 import nhk.entity.Word
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface WordRepository : CrudRepository<Word, Int> {
+interface WordRepository : JpaRepository<Word, Int> {
     fun findByName(name: String): List<Word>
 }

@@ -1,6 +1,6 @@
 package nhk.repository
 
 import nhk.entity.NHKNews
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface NHKNewsRepository : CrudRepository<NHKNews, Int>
+interface NHKNewsRepository : JpaRepository<NHKNews, Int>
