@@ -58,9 +58,9 @@ class NHKKindleService {
 
             client.sendRawEmail(rawEmailRequest)
 
-            logger.info("Send to kindle ok")
+            logger.info("Send to kindle ok, mailTo={}", mailTo)
         } catch (e: Exception) {
-            logger.error("Send to kindle error", e)
+            logger.error("Send to kindle error, mailTo={}", mailTo, e)
         }
     }
 
