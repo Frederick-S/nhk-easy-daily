@@ -82,14 +82,10 @@ class NHKKindleService {
                             }
 
                     """
-                        <tr>
-                            <td rowspan="${it.definitions.size}">${it.name}</td>
-                            <td>
-                                <ol>
-                                    $definitions
-                                </ol>
-                            </td>
-                        </tr>
+                        <h3>${it.name}</h3>
+                        <ol>
+                            $definitions
+                        </ol>
                     """.trimIndent()
                 }
 
@@ -101,7 +97,7 @@ class NHKKindleService {
                     <title>${nhkNews.title}</title>
                     <style>
                         h1, h2 {
-                            text-align: center
+                            text-align: center;
                         }
                     </style>
                 </head>
@@ -109,9 +105,7 @@ class NHKKindleService {
                     <h1>${nhkNews.title}</h1>
                     $content
                     <h2>単語</h2>
-                    <table>
-                        $words
-                    </table>
+                    $words
                 </body>
             </html>
         """.trimIndent()
