@@ -69,12 +69,11 @@ class NHKKindleService {
         val paragraphs = document.select("p")
 
         paragraphs.forEach {
-            it.select("rt").remove()
+            it.select("ruby").tagName("span")
+            it.select("rt").tagName("sup")
         }
 
-        val content = paragraphs.joinToString(separator = "") {
-            "<p>${it.text()}</p>"
-        }
+        val content = paragraphs.joinToString(separator = "")
 
         return """
             <!DOCTYPE html>
