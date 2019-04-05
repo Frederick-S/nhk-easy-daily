@@ -38,7 +38,9 @@ class NHKNewsService {
             val publishedDateUtc = DateUtil.nhkDateToUtc(it.newsPrearrangedTime)
 
             utcDate.dayOfMonth == publishedDateUtc.dayOfMonth
-        }.map { parseNews(it) }
+        }.map {
+            parseNews(it)
+        }
 
         newsForToday.forEach {
             nhkNewsRepository.save(it)

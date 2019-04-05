@@ -74,6 +74,15 @@ class NHKKindleService {
         }
 
         val content = paragraphs.joinToString(separator = "")
+        val words = nhkNews.words
+                .joinToString(separator = "") {
+                    """
+                        <tr>
+                            <td style="width: 50%">${it.name}</td>
+                            <td style="width: 50%">${it.definition}</td>
+                        </tr>
+                    """.trimIndent()
+                }
 
         return """
             <!DOCTYPE html>
@@ -85,6 +94,10 @@ class NHKKindleService {
                 <body>
                     <h1 style="text-align: center;">${nhkNews.title}</h1>
                     $content
+                    <h2 style="text-align: center;">単語</h2>
+                    <table>
+                        $words
+                    </table>
                 </body>
             </html>
         """.trimIndent()
