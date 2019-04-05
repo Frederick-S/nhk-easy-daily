@@ -12,6 +12,7 @@ import nhk.repository.NHKNewsRepository
 import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.hibernate.criterion.Example
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -47,6 +48,13 @@ class NHKNewsService {
 
                 if (words.isEmpty()) {
                     wordRepository.save(word)
+                } else {
+                    words.forEach { currentWord ->
+                        currentWord.definition = word.definition
+                        currentWord.definitionWithRuby = word.definitionWithRuby
+                    }
+
+                    wordRepository.saveAll(words)
                 }
             }
         }
