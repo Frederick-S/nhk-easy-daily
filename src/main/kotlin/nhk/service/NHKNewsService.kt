@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.TimeZone
 
@@ -49,9 +50,12 @@ class NHKNewsService {
                 if (words.isEmpty()) {
                     wordRepository.save(word)
                 } else {
+                    val now = Instant.now()
+
                     words.forEach { currentWord ->
                         currentWord.definition = word.definition
                         currentWord.definitionWithRuby = word.definitionWithRuby
+                        currentWord.updatedAtUtc = now
                     }
 
                     wordRepository.saveAll(words)
