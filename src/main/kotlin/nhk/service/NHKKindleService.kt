@@ -78,7 +78,12 @@ class NHKKindleService {
                 .joinToString(separator = "") {
                     val definitions = it.definitions
                             .joinToString("") { definition ->
-                                "<li>${definition.definition}</li>"
+                                val root = Jsoup.parse(definition.definitionWithRuby)
+
+                                root.select("ruby").tagName("span")
+                                root.select("rt").tagName("sup")
+
+                                "<li>${root.outerHtml()}</li>"
                             }
 
                     """
