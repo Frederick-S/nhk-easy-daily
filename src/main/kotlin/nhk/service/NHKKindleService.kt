@@ -99,11 +99,16 @@ class NHKKindleService {
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
                     <title>${nhkNews.title}</title>
+                    <style>
+                        h1, h2 {
+                            text-align: center
+                        }
+                    </style>
                 </head>
                 <body>
-                    <h1 style="text-align: center;">${nhkNews.title}</h1>
+                    <h1>${nhkNews.title}</h1>
                     $content
-                    <h2 style="text-align: center;">単語</h2>
+                    <h2>単語</h2>
                     <table>
                         $words
                     </table>
