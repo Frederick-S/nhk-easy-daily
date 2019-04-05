@@ -8,6 +8,7 @@ import nhk.DateUtil
 import nhk.domain.NHKTopNews
 import nhk.entity.NHKNews
 import nhk.entity.Word
+import nhk.entity.WordDefinition
 import nhk.repository.NHKNewsRepository
 import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.TimeZone
 
@@ -50,16 +50,6 @@ class NHKNewsService {
 
                 if (words.isEmpty()) {
                     wordRepository.save(word)
-                } else {
-                    val now = Instant.now()
-
-                    words.forEach { currentWord ->
-                        currentWord.definition = word.definition
-                        currentWord.definitionWithRuby = word.definitionWithRuby
-                        currentWord.updatedAtUtc = now
-                    }
-
-                    wordRepository.saveAll(words)
                 }
             }
         }
@@ -124,11 +114,23 @@ class NHKNewsService {
 
             return entries.flatMap { entry ->
                 entry.toList()
-                        .map { w ->
+                        .groupBy { w -> w.get("hyouki")[0].asText() }
+                        .entries
+                        .map { keyValue ->
                             val word = Word()
-                            word.name = w.get("hyouki")[0].asText()
-                            word.definitionWithRuby = w.get("def").asText()
-                            word.definition = this.extractWordDefinition(word.definitionWithRuby)
+                            word.name = keyValue.key
+
+                            val wordDefinitions = keyValue.value
+                                    .map { node ->
+                                        val wordDefinition = WordDefinition()
+                                        wordDefinition.definitionWithRuby = node.get("def").asText()
+                                        wordDefinition.definition = this.extractWordDefinition(wordDefinition.definitionWithRuby)
+                                        wordDefinition.word = word
+
+                                        wordDefinition
+                                    }
+
+                            word.definitions = wordDefinitions
 
                             word
                         }
