@@ -10,7 +10,7 @@ import javax.persistence.OneToMany
 
 @Entity
 class Word : BaseEntity() {
-    @Column(unique = true, length = 50)
+    @Column(length = 50)
     var name = ""
 
     @OneToMany(mappedBy = "word", cascade = [CascadeType.ALL])
