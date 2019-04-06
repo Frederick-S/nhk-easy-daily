@@ -21,6 +21,8 @@ class NHKNewsEasyDailyTask {
     fun saveTopNewsForToday() {
         val utcNow = ZonedDateTime.now(ZoneId.of(Constants.TIME_ZONE_UTC))
 
+        logger.info("Start to fetch news, utcNow={}", utcNow)
+
         nhkNewsService.saveTopNewsOf(utcNow)
     }
 }
