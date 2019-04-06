@@ -1,9 +1,10 @@
 package nhk.entity
 
 import java.time.Instant
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.Transient
+import javax.persistence.OneToMany
 
 @Entity
 class NHKNews : BaseEntity() {
@@ -33,6 +34,6 @@ class NHKNews : BaseEntity() {
 
     var publishedAtUtc = Instant.now()
 
-    @Transient
+    @OneToMany(mappedBy = "nhkNews", cascade = [CascadeType.ALL])
     var words = emptyList<Word>()
 }

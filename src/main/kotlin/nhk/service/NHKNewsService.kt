@@ -10,7 +10,6 @@ import nhk.entity.NHKNews
 import nhk.entity.Word
 import nhk.entity.WordDefinition
 import nhk.repository.NHKNewsRepository
-import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
@@ -29,9 +28,6 @@ class NHKNewsService {
     @Autowired
     lateinit var nhkNewsRepository: NHKNewsRepository
 
-    @Autowired
-    lateinit var wordRepository: WordRepository
-
     fun saveTopNewsOf(utcDate: ZonedDateTime) {
         val topNews = getTopNews()
         val newsForToday = topNews.filter {
@@ -44,14 +40,6 @@ class NHKNewsService {
 
         newsForToday.forEach {
             nhkNewsRepository.save(it)
-
-            it.words.forEach { word ->
-                val words = wordRepository.findByName(word.name)
-
-                if (words.isEmpty()) {
-                    wordRepository.save(word)
-                }
-            }
         }
     }
 
@@ -93,6 +81,11 @@ class NHKNewsService {
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
         nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).toInstant()
         nhkNews.words = parseWords(newsId)
+                .apply {
+                    forEach { word ->
+                        word.nhkNews = nhkNews
+                    }
+                }
 
         return nhkNews
     }

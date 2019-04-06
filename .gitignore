@@ -110,3 +110,4 @@ fabric.properties
 *.iml
 *.db
 *.gz
+src/main/resources/rebel.xml
