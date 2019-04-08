@@ -17,7 +17,7 @@ class NHKNewsEasyDailyTask {
     @Autowired
     lateinit var nhkNewsService: NHKNewsService
 
-    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 0 18 * * *")
     fun saveTopNewsForToday() {
         val utcNow = ZonedDateTime.now(ZoneId.of(Constants.TIME_ZONE_UTC))
 
