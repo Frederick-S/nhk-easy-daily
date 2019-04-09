@@ -1,5 +1,6 @@
 package nhk.service
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -106,31 +107,35 @@ class NHKNewsService {
             val entries = reikai.get("entries")
 
             return entries.flatMap { entry ->
-                entry.toList()
-                        .groupBy { w -> w.get("hyouki")[0].asText() }
-                        .entries
-                        .map { keyValue ->
-                            val word = Word()
-                            word.name = keyValue.key
-
-                            val wordDefinitions = keyValue.value
-                                    .map { node ->
-                                        val wordDefinition = WordDefinition()
-                                        wordDefinition.definitionWithRuby = node.get("def").asText()
-                                        wordDefinition.definition = this.extractWordDefinition(wordDefinition.definitionWithRuby)
-                                        wordDefinition.word = word
-
-                                        wordDefinition
-                                    }
-
-                            word.definitions = wordDefinitions
-
-                            word
-                        }
+                parseWord(entry)
             }
         }
 
         return emptyList()
+    }
+
+    private fun parseWord(node: JsonNode): List<Word> {
+        return node.toList()
+                .groupBy { it.get("hyouki")[0].asText() }
+                .entries
+                .map { keyValue ->
+                    val word = Word()
+                    word.name = keyValue.key
+
+                    val wordDefinitions = keyValue.value
+                            .map { node ->
+                                val wordDefinition = WordDefinition()
+                                wordDefinition.definitionWithRuby = node.get("def").asText()
+                                wordDefinition.definition = this.extractWordDefinition(wordDefinition.definitionWithRuby)
+                                wordDefinition.word = word
+
+                                wordDefinition
+                            }
+
+                    word.definitions = wordDefinitions
+
+                    word
+                }
     }
 
     private fun extractWordDefinition(definitionWithRuby: String): String {
