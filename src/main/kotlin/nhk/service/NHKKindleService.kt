@@ -79,7 +79,7 @@ class NHKKindleService {
             it.select("rt").tagName("sup")
         }
 
-        val content = paragraphs.joinToString(separator = "")
+        val news = paragraphs.joinToString(separator = "")
         val words = nhkNews.words
                 .joinToString(separator = "") {
                     val definitions = it.definitions
@@ -114,7 +114,7 @@ class NHKKindleService {
                 </head>
                 <body>
                     <h1>${nhkNews.title}</h1>
-                    $content
+                    $news
                     <h2>単語</h2>
                     $words
                 </body>
