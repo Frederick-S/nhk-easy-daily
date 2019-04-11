@@ -26,6 +26,28 @@ class NHKKindleService {
     private val logger: Logger = LoggerFactory.getLogger(NHKKindleService::class.java)
 
     fun sendToKindle(nhkNews: NHKNews, mailFrom: String, mailTo: String) {
+        val message = buildMessage(nhkNews, mailFrom, mailTo)
+
+        try {
+            val client = AmazonSimpleEmailServiceClientBuilder.standard()
+                    .withRegion(Regions.US_WEST_2)
+                    .build()
+
+            val outputStream = ByteArrayOutputStream()
+            message.writeTo(outputStream)
+
+            val rawMessage = RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
+            val rawEmailRequest = SendRawEmailRequest(rawMessage)
+
+            client.sendRawEmail(rawEmailRequest)
+
+            logger.info("Send to kindle ok, mailTo={}", mailTo)
+        } catch (e: Exception) {
+            logger.error("Send to kindle error, mailTo={}", mailTo, e)
+        }
+    }
+
+    private fun buildMessage(nhkNews: NHKNews, mailFrom: String, mailTo: String): MimeMessage {
         val textPart = MimeBodyPart()
         textPart.setContent("NHK Easy", "text/plain; charset=UTF-8")
 
@@ -45,23 +67,7 @@ class NHKKindleService {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo))
         message.setContent(mixedPart)
 
-        try {
-            val client = AmazonSimpleEmailServiceClientBuilder.standard()
-                    .withRegion(Regions.US_WEST_2)
-                    .build()
-
-            val outputStream = ByteArrayOutputStream()
-            message.writeTo(outputStream)
-
-            val rawMessage = RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
-            val rawEmailRequest = SendRawEmailRequest(rawMessage)
-
-            client.sendRawEmail(rawEmailRequest)
-
-            logger.info("Send to kindle ok, mailTo={}", mailTo)
-        } catch (e: Exception) {
-            logger.error("Send to kindle error, mailTo={}", mailTo, e)
-        }
+        return message
     }
 
     private fun getAttachmentContent(nhkNews: NHKNews): String {
