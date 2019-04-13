@@ -100,25 +100,29 @@ class NHKKindleService {
                     """.trimIndent()
                 }
 
+        return getHtml(nhkNews.title, news, words)
+    }
+
+    private fun getHtml(title: String, news: String, words: String): String {
         return """
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <title>${nhkNews.title}</title>
-                    <style>
-                        h1, h2 {
-                            text-align: center;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>${nhkNews.title}</h1>
-                    $news
-                    <h2>単語</h2>
-                    $words
-                </body>
-            </html>
-        """.trimIndent()
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                        <title>$title</title>
+                        <style>
+                            h1, h2 {
+                                text-align: center;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>$title</h1>
+                        $news
+                        <h2>単語</h2>
+                        $words
+                    </body>
+                </html>
+            """.trimIndent()
     }
 }
