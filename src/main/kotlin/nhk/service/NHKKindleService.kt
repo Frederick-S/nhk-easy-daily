@@ -40,10 +40,8 @@ class NHKKindleService {
             val rawMessage = RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
             val rawEmailRequest = SendRawEmailRequest(rawMessage)
             val result = client.sendRawEmail(rawEmailRequest)
-            val httpMetadata = result.sdkHttpMetadata
-            val httpStatusCode = httpMetadata.httpStatusCode
-            val responseMetadata = result.sdkResponseMetadata
-            val requestId = responseMetadata.requestId
+            val httpStatusCode = result.sdkHttpMetadata.httpStatusCode
+            val requestId = result.sdkResponseMetadata.requestId
 
             when (httpStatusCode) {
                 HttpStatus.OK.value() -> logger.info("Send to kindle ok, mailTo={}, requestId={}", mailTo, requestId)
