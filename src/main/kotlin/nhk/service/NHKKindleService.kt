@@ -8,6 +8,7 @@ import nhk.entity.NHKNews
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -38,10 +39,16 @@ class NHKKindleService {
 
             val rawMessage = RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
             val rawEmailRequest = SendRawEmailRequest(rawMessage)
+            val result = client.sendRawEmail(rawEmailRequest)
+            val httpMetadata = result.sdkHttpMetadata
+            val httpStatusCode = httpMetadata.httpStatusCode
+            val responseMetadata = result.sdkResponseMetadata
+            val requestId = responseMetadata.requestId
 
-            client.sendRawEmail(rawEmailRequest)
-
-            logger.info("Send to kindle ok, mailTo={}", mailTo)
+            when (httpStatusCode) {
+                HttpStatus.OK.value() -> logger.info("Send to kindle ok, mailTo={}, requestId={}", mailTo, requestId)
+                else -> logger.error("Send to kindle error, mailTo={}, requestId={}", mailTo, requestId)
+            }
         } catch (e: Exception) {
             logger.error("Send to kindle error, mailTo={}", mailTo, e)
         }
