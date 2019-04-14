@@ -7,6 +7,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: 123456
           MYSQL_DATABASE: nhk_test
+      - image: circleci/node:lts
 
     working_directory: ~/repo
 
@@ -32,3 +33,8 @@ jobs:
       - run: gradle ktlint
       - run: gradle test jacocoTestReport
       - run: bash <(curl -s https://codecov.io/bash)
+      - run: cd web
+      - run: yarn
+      - run: yarn lint
+      - run: yarn build
+      - run: yarn test
