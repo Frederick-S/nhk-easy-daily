@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'"
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
+    "copy": "rimraf ../src/main/resources/static/**/* && copyfiles --up 1 ./build/**/* ../src/main/resources/static"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,6 +31,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "copyfiles": "^2.1.0",
+    "rimraf": "^2.6.3",
     "tslint": "^5.15.0",
     "tslint-react": "^4.0.0"
   },

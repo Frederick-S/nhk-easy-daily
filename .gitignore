@@ -111,3 +111,4 @@ fabric.properties
 *.db
 *.gz
 src/main/resources/rebel.xml
+src/main/resources/static
