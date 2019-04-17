@@ -91,7 +91,7 @@ class NHKNewsService {
         return nhkNews
     }
 
-    fun parseWords(newsId: String): List<Word> {
+    private fun parseWords(newsId: String): List<Word> {
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.out.dic"
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()

@@ -21,18 +21,12 @@ class NHKNewsServiceTest : BaseTest() {
     }
 
     @Test
-    fun shouldParseNews() {
+    fun shouldParseNewsAndWords() {
         val topNews = nhkNewsService.getTopNews()
         val news = nhkNewsService.parseNews(topNews[0])
 
         Assert.assertNotNull(news)
-    }
-
-    @Test
-    fun shouldParseNewsWords() {
-        val words = nhkNewsService.parseWords("k10011781211000")
-
-        Assert.assertTrue(words.isNotEmpty())
+        Assert.assertTrue(news.words.isNotEmpty())
     }
 
     @Test
