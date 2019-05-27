@@ -33,7 +33,7 @@
   "devDependencies": {
     "copyfiles": "^2.1.0",
     "rimraf": "^2.6.3",
-    "tslint": "^5.15.0",
+    "tslint": "^5.16.0",
     "tslint-react": "^4.0.0"
   },
   "proxy": "http://localhost:8080"
