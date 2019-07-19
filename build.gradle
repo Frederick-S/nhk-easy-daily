@@ -46,7 +46,7 @@ configurations {
 dependencies {
     implementation 'mysql:mysql-connector-java:8.0.16'
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.585'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.594'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
