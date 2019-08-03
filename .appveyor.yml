@@ -17,4 +17,4 @@ before_test:
   - cd web && yarn lint && yarn build
 test_script:
   - gradlew.bat test jacocoTestReport
-  - cd web && yarn test
+  - cd web && yarn test:unit
