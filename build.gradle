@@ -48,7 +48,7 @@ dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'com.amazonaws:aws-java-sdk-ses:1.11.688'
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1'
