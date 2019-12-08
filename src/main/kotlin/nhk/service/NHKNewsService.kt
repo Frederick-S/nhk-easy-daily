@@ -3,9 +3,10 @@ package nhk.service
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
-import nhk.DateUtil
 import nhk.domain.NHKTopNews
 import nhk.entity.NHKNews
 import nhk.entity.Word
@@ -18,9 +19,10 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.TimeZone
+import java.time.format.DateTimeFormatter
 
 @Service
 class NHKNewsService {
@@ -29,12 +31,13 @@ class NHKNewsService {
     @Autowired
     lateinit var nhkNewsRepository: NHKNewsRepository
 
-    fun saveTopNewsOf(utcDate: ZonedDateTime) {
+    fun saveTopNewsOf(date: ZonedDateTime) {
         val topNews = getTopNews()
         val newsForToday = topNews.filter {
-            val publishedDateUtc = DateUtil.nhkDateToUtc(it.newsPrearrangedTime)
+            val publishedDate = ZonedDateTime.of(it.newsPrearrangedTime, ZoneId.of("+9"))
+                    .withZoneSameInstant(ZoneId.systemDefault())
 
-            utcDate.dayOfMonth == publishedDateUtc.dayOfMonth
+            date.dayOfMonth == publishedDate.dayOfMonth
         }.map {
             parseNews(it)
         }
@@ -53,10 +56,13 @@ class NHKNewsService {
         val json = response.body()?.string()
 
         json?.let {
+            val javaTimeModule = JavaTimeModule()
+            val localDateTimeDeserializer = LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(Constants.NHK_NEWS_EASY_DATE_FORMAT))
+            javaTimeModule.addDeserializer(LocalDateTime::class.java, localDateTimeDeserializer)
+
             val objectMapper = ObjectMapper()
             objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-            objectMapper.dateFormat = SimpleDateFormat(Constants.NHK_NEWS_EASY_DATE_FORMAT)
-            objectMapper.setTimeZone(TimeZone.getTimeZone("JST"))
+            objectMapper.registerModule(javaTimeModule)
 
             return objectMapper.readValue(it)
         }
@@ -80,7 +86,7 @@ class NHKNewsService {
         nhkNews.body = content
         nhkNews.imageUrl = nhkTopNews.newsWebImageUri
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
-        nhkNews.publishedAtUtc = DateUtil.nhkDateToUtc(nhkTopNews.newsPrearrangedTime).toInstant()
+        nhkNews.publishedAtUtc = ZonedDateTime.of(nhkTopNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
         nhkNews.words = parseWords(newsId)
                 .apply {
                     forEach { word ->

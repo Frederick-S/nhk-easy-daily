@@ -1,6 +1,6 @@
 package nhk.domain
 
-import java.util.Date
+import java.time.LocalDateTime
 
 class NHKTopNews {
     var topPriorityNumber = 0
@@ -9,7 +9,7 @@ class NHKTopNews {
 
     var newsId = ""
 
-    var newsPrearrangedTime = Date()
+    var newsPrearrangedTime = LocalDateTime.now()
 
     var title = ""
 

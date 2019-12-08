@@ -5,6 +5,8 @@ import nhk.service.NHKNewsService
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class NHKNewsServiceTest : BaseTest() {
     @Autowired
@@ -32,7 +34,8 @@ class NHKNewsServiceTest : BaseTest() {
     @Test
     fun shouldSaveTopNewsForSpecifiedDate() {
         val topNews = nhkNewsService.getTopNews()
-        val date = DateUtil.nhkDateToUtc(topNews[0].newsPrearrangedTime)
+        val date = ZonedDateTime.of(topNews[0].newsPrearrangedTime, ZoneId.of("+9"))
+                .withZoneSameInstant(ZoneId.systemDefault())
 
         nhkNewsService.saveTopNewsOf(date)
 
