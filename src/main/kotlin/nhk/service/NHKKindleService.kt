@@ -53,16 +53,12 @@ class NHKKindleService {
     }
 
     private fun buildMessage(nhkNews: NHKNews, mailFrom: String, mailTo: String): MimeMessage {
-        val textPart = MimeBodyPart()
-        textPart.setContent("NHK Easy", "text/plain; charset=UTF-8")
-
         val attachment = MimeBodyPart()
         val byteArrayDataSource = ByteArrayDataSource(getAttachmentContent(nhkNews), "text/html")
         attachment.dataHandler = DataHandler(byteArrayDataSource)
         attachment.fileName = "${nhkNews.title}.html"
 
         val mixedPart = MimeMultipart("mixed")
-        mixedPart.addBodyPart(textPart)
         mixedPart.addBodyPart(attachment)
 
         val session = Session.getDefaultInstance(Properties())
