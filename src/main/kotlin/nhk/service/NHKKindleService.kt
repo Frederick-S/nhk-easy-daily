@@ -63,7 +63,7 @@ class NHKKindleService {
 
         val session = Session.getDefaultInstance(Properties())
         val message = MimeMessage(session)
-        message.setSubject("NHK", Charsets.UTF_8.displayName())
+        message.setSubject(nhkNews.title, Charsets.UTF_8.displayName())
         message.setFrom(InternetAddress(mailFrom))
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo))
         message.setContent(mixedPart)
