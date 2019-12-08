@@ -53,7 +53,7 @@ class NHKNewsService {
                 .url(Constants.TOP_NEWS_URL)
                 .build()
         val response = okHttpClient.newCall(request).execute()
-        val json = response.body()?.string()
+        val json = response.body?.string()
 
         json?.let {
             val javaTimeModule = JavaTimeModule()
@@ -104,7 +104,7 @@ class NHKNewsService {
                 .url(url)
                 .build()
         val response = okHttpClient.newCall(request).execute()
-        val json = response.body()?.string()
+        val json = response.body?.string()
 
         json?.let {
             val objectMapper = ObjectMapper()
