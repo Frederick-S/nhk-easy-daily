@@ -10,7 +10,7 @@
     "copy-dist": "rimraf ../src/main/resources/static/**/* && copyfiles --up 1 ./dist/**/* ../src/main/resources/static"
   },
   "dependencies": {
-    "core-js": "^3.4.8",
+    "core-js": "^3.5.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.3.0",
