@@ -2,4 +2,5 @@ spring:
   profiles:
     active: dev
 logging:
-  file: app.log
+  file:
+    name: app.log
