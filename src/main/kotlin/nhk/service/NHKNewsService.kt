@@ -88,16 +88,11 @@ class NHKNewsService {
         nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
         nhkNews.publishedAtUtc = ZonedDateTime.of(nhkTopNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
         nhkNews.words = parseWords(newsId)
-                .apply {
-                    forEach { word ->
-                        word.nhkNews = nhkNews
-                    }
-                }
 
         return nhkNews
     }
 
-    private fun parseWords(newsId: String): List<Word> {
+    private fun parseWords(newsId: String): Set<Word> {
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.out.dic"
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
@@ -114,10 +109,10 @@ class NHKNewsService {
 
             return entries.flatMap { entry ->
                 parseWord(entry)
-            }
+            }.toSet()
         }
 
-        return emptyList()
+        return emptySet()
     }
 
     private fun parseWord(node: JsonNode): List<Word> {

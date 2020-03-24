@@ -5,7 +5,9 @@ import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.OneToMany
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 
 @Entity
 class NHKNews : BaseEntity() {
@@ -35,6 +37,9 @@ class NHKNews : BaseEntity() {
 
     var publishedAtUtc = Instant.now()
 
-    @OneToMany(mappedBy = "nhkNews", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var words = emptyList<Word>()
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinTable(name = "news_word",
+            joinColumns = [JoinColumn(name = "news_id", referencedColumnName = "id", nullable = false, updatable = false)],
+            inverseJoinColumns = [JoinColumn(name = "word_id", referencedColumnName = "id", nullable = false, updatable = false)])
+    var words = emptySet<Word>()
 }

@@ -16,9 +16,8 @@ class NewsController : BaseController() {
     lateinit var nhkNewsRepository: NHKNewsRepository
 
     @GetMapping("/news")
-    fun getNews(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) start: Date,
-                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: Date): List<NHKNewsDto> {
-        return nhkNewsRepository.findByPublishedAtUtcBetween(start.toInstant(), end.toInstant())
+    fun getNews(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startDate: Date, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endDate: Date): List<NHKNewsDto> {
+        return nhkNewsRepository.findByPublishedAtUtcBetween(startDate.toInstant(), endDate.toInstant())
                 .map {
                     val news = NHKNewsDto()
                     news.newsId = it.newsId
