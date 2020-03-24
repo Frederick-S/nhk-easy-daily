@@ -21,5 +21,5 @@ class Word : BaseEntity() {
     var updatedAtUtc = Instant.now()
 
     @ManyToMany(mappedBy = "words", fetch = FetchType.LAZY)
-    var news = emptySet<NHKNews>()
+    var news = emptySet<News>()
 }

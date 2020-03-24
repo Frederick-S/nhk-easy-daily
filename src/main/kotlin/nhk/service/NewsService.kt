@@ -7,11 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
-import nhk.domain.NHKTopNews
-import nhk.entity.NHKNews
+import nhk.domain.TopNews
+import nhk.entity.News
 import nhk.entity.Word
 import nhk.entity.WordDefinition
-import nhk.repository.NHKNewsRepository
+import nhk.repository.NewsRepository
+import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
@@ -25,29 +26,32 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class NHKNewsService {
-    private val logger: Logger = LoggerFactory.getLogger(NHKNewsService::class.java)
+class NewsService {
+    private val logger: Logger = LoggerFactory.getLogger(NewsService::class.java)
 
     @Autowired
-    lateinit var nhkNewsRepository: NHKNewsRepository
+    lateinit var newsRepository: NewsRepository
+
+    @Autowired
+    lateinit var wordRepository: WordRepository
 
     fun saveTopNewsOf(date: ZonedDateTime) {
         val topNews = getTopNews()
-        val newsForToday = topNews.filter {
-            val publishedDate = ZonedDateTime.of(it.newsPrearrangedTime, ZoneId.of("+9"))
+        val newsForToday = topNews.filter { news ->
+            val publishedDate = ZonedDateTime.of(news.newsPrearrangedTime, ZoneId.of("+9"))
                     .withZoneSameInstant(ZoneId.systemDefault())
 
             date.dayOfMonth == publishedDate.dayOfMonth
-        }.map {
-            parseNews(it)
+        }.map { news ->
+            parseNews(news)
         }
 
-        newsForToday.forEach {
-            nhkNewsRepository.save(it)
+        newsForToday.forEach { news ->
+            newsRepository.save(news)
         }
     }
 
-    fun getTopNews(): List<NHKTopNews> {
+    fun getTopNews(): List<TopNews> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
                 .url(Constants.TOP_NEWS_URL)
@@ -70,26 +74,26 @@ class NHKNewsService {
         return emptyList()
     }
 
-    fun parseNews(nhkTopNews: NHKTopNews): NHKNews {
-        val newsId = nhkTopNews.newsId
+    fun parseNews(topNews: TopNews): News {
+        val newsId = topNews.newsId
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.html"
         val document = Jsoup.connect(url).get()
         val body = document.getElementById("js-article-body")
         val content = body.html()
 
-        val nhkNews = NHKNews()
-        nhkNews.newsId = newsId
-        nhkNews.title = nhkTopNews.title
-        nhkNews.titleWithRuby = nhkTopNews.titleWithRuby
-        nhkNews.outlineWithRuby = nhkTopNews.outlineWithRuby
-        nhkNews.url = url
-        nhkNews.body = content
-        nhkNews.imageUrl = nhkTopNews.newsWebImageUri
-        nhkNews.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${nhkTopNews.newsId}.mp4/master.m3u8"
-        nhkNews.publishedAtUtc = ZonedDateTime.of(nhkTopNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
-        nhkNews.words = parseWords(newsId)
+        val news = News()
+        news.newsId = newsId
+        news.title = topNews.title
+        news.titleWithRuby = topNews.titleWithRuby
+        news.outlineWithRuby = topNews.outlineWithRuby
+        news.url = url
+        news.body = content
+        news.imageUrl = topNews.newsWebImageUri
+        news.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${topNews.newsId}.mp4/master.m3u8"
+        news.publishedAtUtc = ZonedDateTime.of(topNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
+        news.words = parseWords(newsId)
 
-        return nhkNews
+        return news
     }
 
     private fun parseWords(newsId: String): Set<Word> {
@@ -115,9 +119,9 @@ class NHKNewsService {
         return emptySet()
     }
 
-    private fun parseWord(node: JsonNode): List<Word> {
-        return node.toList()
-                .groupBy { it.get("hyouki")[0].asText() }
+    private fun parseWord(root: JsonNode): List<Word> {
+        return root.toList()
+                .groupBy { node -> node.get("hyouki")[0].asText() }
                 .entries
                 .map { keyValue ->
                     val word = Word()
@@ -143,8 +147,8 @@ class NHKNewsService {
         val document = Jsoup.parse(definitionWithRuby)
         val rubies = document.select("ruby")
 
-        rubies.forEach {
-            it.select("rt").remove()
+        rubies.forEach { ruby ->
+            ruby.select("rt").remove()
         }
 
         return document.text()

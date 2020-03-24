@@ -2,7 +2,7 @@ package nhk.domain
 
 import java.time.LocalDateTime
 
-class NHKTopNews {
+class TopNews {
     var topPriorityNumber = 0
 
     var topDisplayFlag = false

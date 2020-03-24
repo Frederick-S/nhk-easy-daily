@@ -2,7 +2,7 @@ package nhk.dto
 
 import java.time.Instant
 
-class NHKNewsDto {
+class NewsDto {
     var newsId = ""
 
     var title = ""

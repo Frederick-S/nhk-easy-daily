@@ -10,7 +10,7 @@ import javax.persistence.JoinTable
 import javax.persistence.ManyToMany
 
 @Entity
-class NHKNews : BaseEntity() {
+class News : BaseEntity() {
     @Column(length = 50)
     var newsId = ""
 

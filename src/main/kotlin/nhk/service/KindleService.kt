@@ -4,7 +4,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
-import nhk.entity.NHKNews
+import nhk.entity.News
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,11 +23,11 @@ import javax.mail.internet.MimeMultipart
 import javax.mail.util.ByteArrayDataSource
 
 @Service
-class NHKKindleService {
-    private val logger: Logger = LoggerFactory.getLogger(NHKKindleService::class.java)
+class KindleService {
+    private val logger: Logger = LoggerFactory.getLogger(KindleService::class.java)
 
-    fun sendToKindle(nhkNews: NHKNews, mailFrom: String, mailTo: String) {
-        val message = buildMessage(nhkNews, mailFrom, mailTo)
+    fun sendToKindle(news: News, mailFrom: String, mailTo: String) {
+        val message = buildMessage(news, mailFrom, mailTo)
 
         try {
             val client = AmazonSimpleEmailServiceClientBuilder.standard()
@@ -52,18 +52,18 @@ class NHKKindleService {
         }
     }
 
-    private fun buildMessage(nhkNews: NHKNews, mailFrom: String, mailTo: String): MimeMessage {
+    private fun buildMessage(news: News, mailFrom: String, mailTo: String): MimeMessage {
         val attachment = MimeBodyPart()
-        val byteArrayDataSource = ByteArrayDataSource(getAttachmentContent(nhkNews), "text/html")
+        val byteArrayDataSource = ByteArrayDataSource(getAttachmentContent(news), "text/html")
         attachment.dataHandler = DataHandler(byteArrayDataSource)
-        attachment.fileName = "${nhkNews.title}.html"
+        attachment.fileName = "${news.title}.html"
 
         val mixedPart = MimeMultipart("mixed")
         mixedPart.addBodyPart(attachment)
 
         val session = Session.getDefaultInstance(Properties())
         val message = MimeMessage(session)
-        message.setSubject(nhkNews.title, Charsets.UTF_8.displayName())
+        message.setSubject(news.title, Charsets.UTF_8.displayName())
         message.setFrom(InternetAddress(mailFrom))
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo))
         message.setContent(mixedPart)
@@ -71,25 +71,25 @@ class NHKKindleService {
         return message
     }
 
-    private fun getAttachmentContent(nhkNews: NHKNews): String {
-        val document = Jsoup.parse(nhkNews.body)
+    private fun getAttachmentContent(news: News): String {
+        val document = Jsoup.parse(news.body)
         val paragraphs = document.select("p")
 
-        paragraphs.forEach {
-            it.select("ruby").tagName("span")
-            it.select("rt").tagName("sup")
+        paragraphs.forEach { p ->
+            p.select("ruby").tagName("span")
+            p.select("rt").tagName("sup")
         }
 
-        val news = paragraphs.joinToString(separator = "")
-        val words = getWordsHtml(nhkNews)
+        val newsHtml = paragraphs.joinToString(separator = "")
+        val words = getWordsHtml(news)
 
-        return getHtml(nhkNews.title, news, words)
+        return getHtml(news.title, newsHtml, words)
     }
 
-    private fun getWordsHtml(nhkNews: NHKNews): String {
-        return nhkNews.words
-                .joinToString(separator = "") {
-                    val definitions = it.definitions
+    private fun getWordsHtml(news: News): String {
+        return news.words
+                .joinToString(separator = "") { word ->
+                    val definitions = word.definitions
                             .joinToString("") { definition ->
                                 val root = Jsoup.parse(definition.definitionWithRuby)
 
@@ -100,7 +100,7 @@ class NHKKindleService {
                             }
 
                     """
-                        <h3>${it.name}</h3>
+                        <h3>${word.name}</h3>
                         <ol>
                             $definitions
                         </ol>

@@ -1,31 +1,31 @@
 package nhk
 
-import nhk.repository.NHKNewsRepository
-import nhk.service.NHKNewsService
+import nhk.repository.NewsRepository
+import nhk.service.NewsService
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class NHKNewsServiceTest : BaseTest() {
+class NewsServiceTest : BaseTest() {
     @Autowired
-    lateinit var nhkNewsService: NHKNewsService
+    lateinit var newsService: NewsService
 
     @Autowired
-    lateinit var nhkNewsRepository: NHKNewsRepository
+    lateinit var newsRepository: NewsRepository
 
     @Test
     fun shouldGetTopNewsForToday() {
-        val topNews = nhkNewsService.getTopNews()
+        val topNews = newsService.getTopNews()
 
         Assert.assertTrue(topNews.isNotEmpty())
     }
 
     @Test
     fun shouldParseNewsAndWords() {
-        val topNews = nhkNewsService.getTopNews()
-        val news = nhkNewsService.parseNews(topNews[0])
+        val topNews = newsService.getTopNews()
+        val news = newsService.parseNews(topNews[0])
 
         Assert.assertNotNull(news)
         Assert.assertTrue(news.words.isNotEmpty())
@@ -33,13 +33,13 @@ class NHKNewsServiceTest : BaseTest() {
 
     @Test
     fun shouldSaveTopNewsForSpecifiedDate() {
-        val topNews = nhkNewsService.getTopNews()
+        val topNews = newsService.getTopNews()
         val date = ZonedDateTime.of(topNews[0].newsPrearrangedTime, ZoneId.of("+9"))
                 .withZoneSameInstant(ZoneId.systemDefault())
 
-        nhkNewsService.saveTopNewsOf(date)
+        newsService.saveTopNewsOf(date)
 
-        val allNews = nhkNewsRepository.findAll().toList()
+        val allNews = newsRepository.findAll().toList()
 
         Assert.assertTrue(allNews.isNotEmpty())
     }

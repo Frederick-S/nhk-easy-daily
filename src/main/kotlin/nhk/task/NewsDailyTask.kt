@@ -1,6 +1,6 @@
 package nhk.task
 
-import nhk.service.NHKNewsService
+import nhk.service.NewsService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 
 @Component
-class NHKNewsEasyDailyTask {
-    private val logger: Logger = LoggerFactory.getLogger(NHKNewsEasyDailyTask::class.java)
+class NewsDailyTask {
+    private val logger: Logger = LoggerFactory.getLogger(NewsDailyTask::class.java)
 
     @Autowired
-    lateinit var nhkNewsService: NHKNewsService
+    lateinit var newsService: NewsService
 
     @Scheduled(cron = "0 0 18 * * *")
     fun saveTopNewsForToday() {
@@ -21,6 +21,6 @@ class NHKNewsEasyDailyTask {
 
         logger.info("Start to fetch news, now={}", now)
 
-        nhkNewsService.saveTopNewsOf(now)
+        newsService.saveTopNewsOf(now)
     }
 }
