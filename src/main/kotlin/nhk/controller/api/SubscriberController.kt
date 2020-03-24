@@ -1,5 +1,6 @@
-package nhk.controller
+package nhk.controller.api
 
+import nhk.controller.BaseController
 import org.springframework.web.bind.annotation.RestController
 
 @RestController

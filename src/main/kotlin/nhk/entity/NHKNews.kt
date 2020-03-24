@@ -4,6 +4,7 @@ import java.time.Instant
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.OneToMany
 
 @Entity
@@ -34,6 +35,6 @@ class NHKNews : BaseEntity() {
 
     var publishedAtUtc = Instant.now()
 
-    @OneToMany(mappedBy = "nhkNews", cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "nhkNews", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var words = emptyList<Word>()
 }
