@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
-import nhk.domain.TopNews
+import nhk.dto.TopNewsDto
 import nhk.entity.News
 import nhk.entity.Word
 import nhk.entity.WordDefinition
@@ -51,7 +51,7 @@ class NewsService {
         }
     }
 
-    fun getTopNews(): List<TopNews> {
+    fun getTopNews(): List<TopNewsDto> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
                 .url(Constants.TOP_NEWS_URL)
@@ -74,7 +74,7 @@ class NewsService {
         return emptyList()
     }
 
-    fun parseNews(topNews: TopNews): News {
+    fun parseNews(topNews: TopNewsDto): News {
         val newsId = topNews.newsId
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.html"
         val document = Jsoup.connect(url).get()
