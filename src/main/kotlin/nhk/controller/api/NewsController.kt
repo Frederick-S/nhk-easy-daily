@@ -4,8 +4,11 @@ import nhk.controller.BaseController
 import nhk.dto.NHKNewsDto
 import nhk.repository.NHKNewsRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.Date
 
 @RestController
 class NewsController : BaseController() {
@@ -13,8 +16,9 @@ class NewsController : BaseController() {
     lateinit var nhkNewsRepository: NHKNewsRepository
 
     @GetMapping("/news")
-    fun getNews(): List<NHKNewsDto> {
-        return nhkNewsRepository.findAll()
+    fun getNews(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) start: Date,
+                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) end: Date): List<NHKNewsDto> {
+        return nhkNewsRepository.findByPublishedAtUtcBetween(start.toInstant(), end.toInstant())
                 .map {
                     val news = NHKNewsDto()
                     news.newsId = it.newsId
