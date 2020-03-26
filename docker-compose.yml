@@ -10,6 +10,8 @@ services:
       - MYSQL_HOST=mysql
       - MYSQL_USER=nhk
       - MYSQL_PWD=nhk
+    networks: 
+      - nhk
   mysql:
     image: "mysql:8"
     ports: 
@@ -18,8 +20,12 @@ services:
       MYSQL_DATABASE: nhk
       MYSQL_USER: nhk
       MYSQL_PASSWORD: nhk
+      MYSQL_ROOT_PASSWORD: nhk
     volumes: 
       - nhk-db:/var/lib/mysql
+    networks: 
+      - nhk
 volumes: 
   nhk-db:
-
+networks: 
+  nhk
