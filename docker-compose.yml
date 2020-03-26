@@ -18,3 +18,8 @@ services:
       MYSQL_DATABASE: nhk
       MYSQL_USER: nhk
       MYSQL_PASSWORD: nhk
+    volumes: 
+      - nhk-db:/var/lib/mysql
+volumes: 
+  nhk-db:
+
