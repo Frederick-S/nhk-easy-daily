@@ -12,6 +12,7 @@ import nhk.entity.News
 import nhk.entity.Word
 import nhk.entity.WordDefinition
 import nhk.repository.NewsRepository
+import nhk.repository.WordDefinitionRepository
 import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,13 +21,15 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class NewsService {
+open class NewsService {
     private val logger: Logger = LoggerFactory.getLogger(NewsService::class.java)
 
     @Autowired
@@ -35,9 +38,13 @@ class NewsService {
     @Autowired
     lateinit var wordRepository: WordRepository
 
-    fun saveTopNewsOf(date: ZonedDateTime) {
+    @Autowired
+    lateinit var wordDefinitionRepository: WordDefinitionRepository
+
+    @Transactional
+    open fun saveTopNewsOf(date: ZonedDateTime) {
         val topNews = getTopNews()
-        val newsForToday = topNews.filter { news ->
+        val newsOfToday = topNews.filter { news ->
             val publishedDate = ZonedDateTime.of(news.newsPrearrangedTime, ZoneId.of("+9"))
                     .withZoneSameInstant(ZoneId.systemDefault())
 
@@ -46,8 +53,40 @@ class NewsService {
             parseNews(news)
         }
 
-        newsForToday.forEach { news ->
-            newsRepository.save(news)
+        newsRepository.saveAll(newsOfToday)
+
+        val words = newsOfToday.flatMap { news ->
+            news.words
+        }.distinctBy { word ->
+            word.name
+        }.map { word ->
+            val currentWords = wordRepository.findByName(word.name)
+
+            if (currentWords.isEmpty()) {
+                word
+            } else {
+                val currentWord = currentWords.first()
+                currentWord.updatedAtUtc = Instant.now()
+                currentWord.definitions = word.definitions
+
+                currentWord
+            }
+        }
+        val newWords = words.filter { word ->
+            word.id == 0
+        }
+
+        wordRepository.saveAll(words)
+
+        newWords.forEach { word ->
+            val definitions = word.definitions
+                    .map { definition ->
+                        definition.wordId = word.id
+
+                        definition
+                    }
+
+            wordDefinitionRepository.saveAll(definitions)
         }
     }
 
@@ -96,7 +135,7 @@ class NewsService {
         return news
     }
 
-    private fun parseWords(newsId: String): Set<Word> {
+    private fun parseWords(newsId: String): MutableSet<Word> {
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.out.dic"
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
@@ -113,10 +152,11 @@ class NewsService {
 
             return entries.flatMap { entry ->
                 parseWord(entry)
-            }.toSet()
+            }
+                    .toMutableSet()
         }
 
-        return emptySet()
+        return mutableSetOf()
     }
 
     private fun parseWord(root: JsonNode): List<Word> {
@@ -132,10 +172,10 @@ class NewsService {
                                 val wordDefinition = WordDefinition()
                                 wordDefinition.definitionWithRuby = node.get("def").asText()
                                 wordDefinition.definition = this.extractWordDefinition(wordDefinition.definitionWithRuby)
-                                wordDefinition.word = word
 
                                 wordDefinition
                             }
+                            .toMutableList()
 
                     word.definitions = wordDefinitions
 

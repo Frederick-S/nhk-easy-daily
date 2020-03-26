@@ -1,6 +1,8 @@
 package nhk
 
 import nhk.repository.NewsRepository
+import nhk.repository.WordDefinitionRepository
+import nhk.repository.WordRepository
 import nhk.service.NewsService
 import org.junit.Assert
 import org.junit.Test
@@ -14,6 +16,12 @@ class NewsServiceTest : BaseTest() {
 
     @Autowired
     lateinit var newsRepository: NewsRepository
+
+    @Autowired
+    lateinit var wordRepository: WordRepository
+
+    @Autowired
+    lateinit var wordDefinitionRepository: WordDefinitionRepository
 
     @Test
     fun shouldGetTopNewsForToday() {
@@ -39,8 +47,12 @@ class NewsServiceTest : BaseTest() {
 
         newsService.saveTopNewsOf(date)
 
-        val allNews = newsRepository.findAll().toList()
+        val allNews = newsRepository.findAll()
+        val allWords = wordRepository.findAll()
+        val allWordDefinitions = wordDefinitionRepository.findAll()
 
         Assert.assertTrue(allNews.isNotEmpty())
+        Assert.assertTrue(allWords.isNotEmpty())
+        Assert.assertTrue(allWordDefinitions.isNotEmpty())
     }
 }
