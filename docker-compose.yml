@@ -28,4 +28,4 @@ services:
 volumes: 
   nhk-db:
 networks: 
-  nhk
+  nhk:
