@@ -8,8 +8,8 @@ services:
       - mysql
     environment: 
       - MYSQL_HOST=mysql
-      - MYSQL_USER=nhk
-      - MYSQL_PWD=nhk
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PWD=${MYSQL_PASSWORD}
     networks: 
       - nhk
   mysql:
@@ -17,10 +17,10 @@ services:
     ports: 
       - "3306:3306"
     environment: 
-      MYSQL_DATABASE: nhk
-      MYSQL_USER: nhk
-      MYSQL_PASSWORD: nhk
-      MYSQL_ROOT_PASSWORD: nhk
+      - MYSQL_DATABASE=nhk
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes: 
       - nhk-db:/var/lib/mysql
     networks: 
