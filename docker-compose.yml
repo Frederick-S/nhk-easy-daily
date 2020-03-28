@@ -9,7 +9,7 @@ services:
     environment: 
       - MYSQL_HOST=mysql
       - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PWD=${MYSQL_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks: 
       - nhk
   mysql:
