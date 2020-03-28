@@ -3,9 +3,10 @@ FROM openjdk:8
 WORKDIR /app
 ADD . /app
 
-RUN wget https://services.gradle.org/distributions/gradle-6.3-bin.zip
-RUN unzip gradle-6.3-bin.zip
-RUN gradle-6.3/bin/gradle bootJar
+ARG GRADLE_VERSION=6.3
+RUN wget https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip
+RUN unzip gradle-$GRADLE_VERSION-bin.zip
+RUN gradle-$GRADLE_VERSION/bin/gradle bootJar
 
 EXPOSE 8080
 
