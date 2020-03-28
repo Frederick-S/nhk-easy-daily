@@ -12,7 +12,7 @@ docker run -e MYSQL_HOST=ip-address-of-mysql (inspected from docker inspect mysq
 ```
 
 ### Docker compose
-Run `cp .env.template .env` and modify user&password, then run `docker compose up`.
+Run `cp .env.template .env` and modify user & password, then run `docker compose up`.
 
 ## License
 [MIT](LICENSE)
