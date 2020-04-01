@@ -7,8 +7,6 @@ import nhk.service.NewsService
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class NewsServiceTest : BaseTest() {
     @Autowired
@@ -24,7 +22,7 @@ class NewsServiceTest : BaseTest() {
     lateinit var wordDefinitionRepository: WordDefinitionRepository
 
     @Test
-    fun shouldGetTopNewsForToday() {
+    fun shouldGetTopNews() {
         val topNews = newsService.getTopNews()
 
         Assert.assertTrue(topNews.isNotEmpty())
@@ -40,12 +38,8 @@ class NewsServiceTest : BaseTest() {
     }
 
     @Test
-    fun shouldSaveTopNewsForSpecifiedDate() {
-        val topNews = newsService.getTopNews()
-        val date = ZonedDateTime.of(topNews[0].newsPrearrangedTime, ZoneId.of("+9"))
-                .withZoneSameInstant(ZoneId.systemDefault())
-
-        newsService.saveTopNewsOf(date)
+    fun shouldSaveTopNews() {
+        newsService.fetchAndSaveTopNews()
 
         val allNews = newsRepository.findAll()
         val allWords = wordRepository.findAll()

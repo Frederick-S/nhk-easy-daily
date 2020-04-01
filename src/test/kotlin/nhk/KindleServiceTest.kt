@@ -13,7 +13,7 @@ class KindleServiceTest : BaseTest() {
     lateinit var kindleService: KindleService
 
     @Test
-    fun shouldSendToKindle() {
+    fun shouldSendNewsToKindle() {
         val topNews = newsService.getTopNews()
         val news = newsService.parseNews(topNews[0])
         val mailFrom = System.getenv("NHK_MAIL_FROM_ADDRESS") ?: "example@example.com"

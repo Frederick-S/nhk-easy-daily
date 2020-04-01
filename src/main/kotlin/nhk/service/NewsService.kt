@@ -42,20 +42,17 @@ open class NewsService {
     lateinit var wordDefinitionRepository: WordDefinitionRepository
 
     @Transactional
-    open fun saveTopNewsOf(date: ZonedDateTime) {
+    open fun fetchAndSaveTopNews() {
         val topNews = getTopNews()
-        val newsOfToday = topNews.filter { news ->
-            val publishedDate = ZonedDateTime.of(news.newsPrearrangedTime, ZoneId.of("+9"))
-                    .withZoneSameInstant(ZoneId.systemDefault())
+                .filter { news ->
+                    newsRepository.findByTitle(news.title).isEmpty()
+                }.map { news ->
+                    parseNews(news)
+                }
 
-            date.dayOfMonth == publishedDate.dayOfMonth
-        }.map { news ->
-            parseNews(news)
-        }
+        newsRepository.saveAll(topNews)
 
-        newsRepository.saveAll(newsOfToday)
-
-        val words = newsOfToday.flatMap { news ->
+        val words = topNews.flatMap { news ->
             news.words
         }.distinctBy { word ->
             word.name
