@@ -8,7 +8,7 @@ class WordDefinition : BaseEntity() {
     @Column(length = 500)
     var definition = ""
 
-    @Column(length = 1000)
+    @Column(length = 2000)
     var definitionWithRuby = ""
 
     var wordId = 0
