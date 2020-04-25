@@ -5,7 +5,7 @@ import javax.persistence.Entity
 
 @Entity
 class WordDefinition : BaseEntity() {
-    @Column(length = 500)
+    @Column(length = 1000)
     var definition = ""
 
     @Column(length = 2000)
