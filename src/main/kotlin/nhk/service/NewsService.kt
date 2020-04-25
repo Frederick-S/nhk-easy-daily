@@ -128,7 +128,7 @@ open class NewsService {
             true -> topNews.newsWebImageUri
             false -> "https://www3.nhk.or.jp/news/easy/${topNews.newsId}/${topNews.newsEasyImageUri}"
         }
-        news.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${topNews.newsId}.mp4/master.m3u8"
+        news.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${topNews.newsEasyVoiceUri}/master.m3u8"
         news.publishedAtUtc = ZonedDateTime.of(topNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
         news.words = parseWords(newsId)
 
