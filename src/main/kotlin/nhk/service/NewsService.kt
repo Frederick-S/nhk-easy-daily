@@ -124,7 +124,10 @@ open class NewsService {
         news.outlineWithRuby = topNews.outlineWithRuby
         news.url = url
         news.body = content
-        news.imageUrl = topNews.newsWebImageUri
+        news.imageUrl = when (topNews.hasNewsWebImage) {
+            true -> topNews.newsWebImageUri
+            false -> "https://www3.nhk.or.jp/news/easy/${topNews.newsId}/${topNews.newsEasyImageUri}"
+        }
         news.m3u8Url = "https://nhks-vh.akamaihd.net/i/news/easy/${topNews.newsId}.mp4/master.m3u8"
         news.publishedAtUtc = ZonedDateTime.of(topNews.newsPrearrangedTime, ZoneId.of("+9")).toInstant()
         news.words = parseWords(newsId)

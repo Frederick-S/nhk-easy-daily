@@ -22,6 +22,8 @@ class NewsController : BaseController() {
                     val dto = NewsDto()
                     dto.newsId = news.newsId
                     dto.title = news.title
+                    dto.titleWithRuby = news.titleWithRuby
+                    dto.outlineWithRuby = news.outlineWithRuby
                     dto.body = news.body
                     dto.url = news.url
                     dto.m3u8Url = news.m3u8Url

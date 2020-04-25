@@ -7,6 +7,10 @@ class NewsDto {
 
     var title = ""
 
+    var titleWithRuby = ""
+
+    var outlineWithRuby = ""
+
     var body = ""
 
     var url = ""
