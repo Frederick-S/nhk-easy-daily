@@ -9,9 +9,11 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import nhk.Constants
 import nhk.dto.TopNewsDto
 import nhk.entity.News
+import nhk.entity.NewsWord
 import nhk.entity.Word
 import nhk.entity.WordDefinition
 import nhk.repository.NewsRepository
+import nhk.repository.NewsWordRepository
 import nhk.repository.WordDefinitionRepository
 import nhk.repository.WordRepository
 import okhttp3.OkHttpClient
@@ -40,6 +42,9 @@ open class NewsService {
 
     @Autowired
     lateinit var wordDefinitionRepository: WordDefinitionRepository
+
+    @Autowired
+    lateinit var newsWordRepository: NewsWordRepository
 
     @Transactional
     open fun fetchAndSaveTopNews() {
@@ -85,6 +90,20 @@ open class NewsService {
 
             wordDefinitionRepository.saveAll(definitions)
         }
+
+        val wordNameIdMap = words.associateBy({ it.name }, { it.id })
+        val newsWords = topNews.flatMap { news ->
+            news.words
+                    .map { word ->
+                        val newsWord = NewsWord()
+                        newsWord.newsId = news.id
+                        newsWord.wordId = wordNameIdMap.getOrDefault(word.name, 0)
+
+                        newsWord
+                    }
+        }
+
+        newsWordRepository.saveAll(newsWords)
     }
 
     fun getTopNews(): List<TopNewsDto> {
@@ -152,8 +171,7 @@ open class NewsService {
 
             return entries.flatMap { entry ->
                 parseWord(entry)
-            }
-                    .toMutableSet()
+            }.toMutableSet()
         }
 
         return mutableSetOf()
