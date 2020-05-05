@@ -3,6 +3,7 @@ package nhk
 import nhk.repository.NewsRepository
 import nhk.repository.WordDefinitionRepository
 import nhk.repository.WordRepository
+import nhk.service.NewsParser
 import nhk.service.NewsService
 import org.junit.Assert
 import org.junit.Test
@@ -21,6 +22,9 @@ class NewsServiceTest : BaseTest() {
     @Autowired
     lateinit var wordDefinitionRepository: WordDefinitionRepository
 
+    @Autowired
+    lateinit var newsParser: NewsParser
+
     @Test
     fun shouldGetTopNews() {
         val topNews = newsService.getTopNews()
@@ -31,7 +35,7 @@ class NewsServiceTest : BaseTest() {
     @Test
     fun shouldParseNewsAndWords() {
         val topNews = newsService.getTopNews()
-        val news = newsService.parseNews(topNews[0])
+        val news = newsParser.parseNews(topNews[0])
 
         Assert.assertNotNull(news)
         Assert.assertTrue(news.words.isNotEmpty())

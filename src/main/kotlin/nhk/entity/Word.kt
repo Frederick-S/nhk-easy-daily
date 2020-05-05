@@ -16,4 +16,7 @@ class Word : BaseEntity() {
 
     @Transient
     var definitions = mutableListOf<WordDefinition>()
+
+    @Transient
+    var idInNews = ""
 }

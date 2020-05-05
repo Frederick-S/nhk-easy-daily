@@ -5,6 +5,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import nhk.entity.News
+import nhk.entity.Word
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -81,34 +82,33 @@ class KindleService {
         }
 
         val newsHtml = paragraphs.joinToString(separator = "")
-        val words = getWordsHtml(news)
+        val wordsHtml = getWordsHtml(news.words)
 
-        return getHtml(news.title, newsHtml, words)
+        return getMailHtml(news.title, newsHtml, wordsHtml)
     }
 
-    private fun getWordsHtml(news: News): String {
-        return news.words
-                .joinToString(separator = "") { word ->
-                    val definitions = word.definitions
-                            .joinToString("") { definition ->
-                                val root = Jsoup.parse(definition.definitionWithRuby)
+    private fun getWordsHtml(words: Set<Word>): String {
+        return words.joinToString(separator = "") { word ->
+            val definitions = word.definitions
+                    .joinToString("") { definition ->
+                        val root = Jsoup.parse(definition.definitionWithRuby)
 
-                                root.select("ruby").tagName("span")
-                                root.select("rt").tagName("sup")
+                        root.select("ruby").tagName("span")
+                        root.select("rt").tagName("sup")
 
-                                "<li>${root.outerHtml()}</li>"
-                            }
+                        "<li>${root.outerHtml()}</li>"
+                    }
 
-                    """
-                        <h3>${word.name}</h3>
-                        <ol>
-                            $definitions
-                        </ol>
-                    """.trimIndent()
-                }
+            """
+                <h3>${word.name}</h3>
+                <ol>
+                    $definitions
+                </ol>
+            """.trimIndent()
+        }
     }
 
-    private fun getHtml(title: String, news: String, words: String): String {
+    private fun getMailHtml(title: String, news: String, words: String): String {
         return """
                 <!DOCTYPE html>
                 <html>
