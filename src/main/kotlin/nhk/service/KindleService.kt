@@ -112,7 +112,7 @@ class KindleService {
     private fun getMailHtml(news: News): String {
         val image = when (StringUtils.isEmpty(news.imageUrl)) {
             true -> ""
-            false -> "<img src=\"${news.imageUrl}\" />"
+            false -> "<img class=\"news-image\" src=\"${news.imageUrl}\" />"
         }
         val wordsHtml = getWordsHtml(news.words)
 
@@ -125,6 +125,11 @@ class KindleService {
                         <style>
                             h1, h2 {
                                 text-align: center;
+                            }
+                            .news-image {
+                                display: block;
+                                margin: 0 auto;
+                                max-width: 100%;
                             }
                             @media print {
                                 p, li {
