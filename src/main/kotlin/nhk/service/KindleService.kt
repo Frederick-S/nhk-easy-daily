@@ -6,6 +6,9 @@ import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import nhk.entity.News
 import nhk.entity.Word
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -54,10 +57,28 @@ class KindleService {
     }
 
     private fun buildMessage(news: News, mailFrom: String, mailTo: String): MimeMessage {
+        val okHttpClient = OkHttpClient()
+        val requestBody = FormBody.Builder()
+                .add("html", getAttachmentContent(news))
+                .add("format", "A6")
+                .build()
+        val request = Request.Builder()
+                .url("https://html2pdf101.azurewebsites.net/pdfs")
+                .post(requestBody)
+                .build()
+        val call = okHttpClient.newCall(request)
+        val response = call.execute()
+
+        if (response.code != 201) {
+            logger.error("Failed to generate pdf from html, statusCode={}, body={}", response.code, response.body?.string())
+
+            throw RuntimeException("Service unavailable")
+        }
+
         val attachment = MimeBodyPart()
-        val byteArrayDataSource = ByteArrayDataSource(getAttachmentContent(news), "text/html")
+        val byteArrayDataSource = ByteArrayDataSource(response.body?.bytes(), "application/pdf")
         attachment.dataHandler = DataHandler(byteArrayDataSource)
-        attachment.fileName = "${news.title}.html"
+        attachment.fileName = "${news.title}.pdf"
 
         val mixedPart = MimeMultipart("mixed")
         mixedPart.addBodyPart(attachment)
@@ -75,12 +96,6 @@ class KindleService {
     private fun getAttachmentContent(news: News): String {
         val document = Jsoup.parse(news.body)
         val paragraphs = document.select("p")
-
-        paragraphs.forEach { p ->
-            p.select("ruby").tagName("span")
-            p.select("rt").tagName("sup")
-        }
-
         val newsHtml = paragraphs.joinToString(separator = "")
         val wordsHtml = getWordsHtml(news.words)
 
@@ -91,12 +106,7 @@ class KindleService {
         return words.joinToString(separator = "") { word ->
             val definitions = word.definitions
                     .joinToString("") { definition ->
-                        val root = Jsoup.parse(definition.definitionWithRuby)
-
-                        root.select("ruby").tagName("span")
-                        root.select("rt").tagName("sup")
-
-                        "<li>${root.outerHtml()}</li>"
+                        "<li>${definition.definitionWithRuby}</li>"
                     }
 
             """
