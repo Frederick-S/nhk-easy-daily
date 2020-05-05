@@ -9,11 +9,11 @@ import nhk.entity.Word
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.jsoup.Jsoup
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.Properties
@@ -59,7 +59,7 @@ class KindleService {
     private fun buildMessage(news: News, mailFrom: String, mailTo: String): MimeMessage {
         val okHttpClient = OkHttpClient()
         val requestBody = FormBody.Builder()
-                .add("html", getAttachmentContent(news))
+                .add("html", getMailHtml(news))
                 .add("format", "A6")
                 .build()
         val request = Request.Builder()
@@ -93,15 +93,6 @@ class KindleService {
         return message
     }
 
-    private fun getAttachmentContent(news: News): String {
-        val document = Jsoup.parse(news.body)
-        val paragraphs = document.select("p")
-        val newsHtml = paragraphs.joinToString(separator = "")
-        val wordsHtml = getWordsHtml(news.words)
-
-        return getMailHtml(news.title, newsHtml, wordsHtml)
-    }
-
     private fun getWordsHtml(words: Set<Word>): String {
         return words.joinToString(separator = "") { word ->
             val definitions = word.definitions
@@ -118,13 +109,19 @@ class KindleService {
         }
     }
 
-    private fun getMailHtml(title: String, news: String, words: String): String {
+    private fun getMailHtml(news: News): String {
+        val image = when (StringUtils.isEmpty(news.imageUrl)) {
+            true -> ""
+            false -> "<img src=\"${news.imageUrl}\" />"
+        }
+        val wordsHtml = getWordsHtml(news.words)
+
         return """
                 <!DOCTYPE html>
                 <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                        <title>$title</title>
+                        <title>${news.title}</title>
                         <style>
                             h1, h2 {
                                 text-align: center;
@@ -140,10 +137,11 @@ class KindleService {
                         </style>
                     </head>
                     <body>
-                        <h1>$title</h1>
-                        $news
+                        $image
+                        <h1>${news.title}</h1>
+                        ${news.body}
                         <h2>単語</h2>
-                        $words
+                        $wordsHtml
                     </body>
                 </html>
             """.trimIndent()
