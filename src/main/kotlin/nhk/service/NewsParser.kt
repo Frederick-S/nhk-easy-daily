@@ -20,15 +20,18 @@ class NewsParser {
         val url = "https://www3.nhk.or.jp/news/easy/$newsId/$newsId.html"
         val document = Jsoup.connect(url).get()
         val body = document.getElementById("js-article-body")
-        val content = body.html()
+        val links = body.select("a")
+        links.forEach { link ->
+            link.removeAttr("href")
+        }
 
         val news = News()
         news.newsId = newsId
         news.title = topNews.title
         news.titleWithRuby = topNews.titleWithRuby
-        news.outlineWithRuby = topNews.outlineWithRuby
+        news.outlineWithRuby = cleanUpOutline(topNews.outlineWithRuby)
         news.url = url
-        news.body = content
+        news.body = body.html()
         news.imageUrl = when (topNews.hasNewsWebImage) {
             true -> topNews.newsWebImageUri
             false -> "https://www3.nhk.or.jp/news/easy/${topNews.newsId}/${topNews.newsEasyImageUri}"
@@ -99,5 +102,17 @@ class NewsParser {
         }
 
         return document.text()
+    }
+
+    private fun cleanUpOutline(outline: String): String {
+        val document = Jsoup.parse(outline)
+        val links = document.select("a")
+        links.forEach { link ->
+            link.removeAttr("href")
+        }
+
+        // Jsoup wraps html/body around outline,
+        // so we get body first and return its inner html
+        return document.select("body").html()
     }
 }
