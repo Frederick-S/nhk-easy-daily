@@ -129,6 +129,14 @@ class KindleService {
                             h1, h2 {
                                 text-align: center;
                             }
+                            @media print {
+                                p, li {
+                                    page-break-inside: avoid;
+                                }
+                            }
+                            @page {
+                                margin: 20px;
+                            }
                         </style>
                     </head>
                     <body>
