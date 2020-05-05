@@ -4,3 +4,5 @@ spring:
 logging:
   file:
     name: app.log
+html2pdf:
+  host: ${HTML_2_PDF_HOST:https://html2pdf101.azurewebsites.net}

@@ -4,6 +4,7 @@ import com.amazonaws.regions.Regions
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
+import nhk.config.Html2PdfConfig
 import nhk.entity.News
 import nhk.entity.Word
 import okhttp3.FormBody
@@ -11,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
@@ -29,6 +31,9 @@ import javax.mail.util.ByteArrayDataSource
 @Service
 class KindleService {
     private val logger: Logger = LoggerFactory.getLogger(KindleService::class.java)
+
+    @Autowired
+    lateinit var html2PdfConfig: Html2PdfConfig
 
     fun sendToKindle(news: News, mailFrom: String, mailTo: String) {
         val message = buildMessage(news, mailFrom, mailTo)
@@ -63,7 +68,7 @@ class KindleService {
                 .add("format", "A6")
                 .build()
         val request = Request.Builder()
-                .url("https://html2pdf101.azurewebsites.net/pdfs")
+                .url("${html2PdfConfig.host}/pdfs")
                 .post(requestBody)
                 .build()
         val call = okHttpClient.newCall(request)
