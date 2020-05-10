@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <button @click="login">Login</button>
+    <b-button type="is-primary" icon-left="microsoft" @click="login">Login with Microsoft</b-button>
   </div>
 </template>
 
