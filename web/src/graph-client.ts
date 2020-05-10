@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { UserAgentApplication } from 'msal'
+import MicrosoftUser from '@/data/microsoft-user'
 
 export default class GraphClient {
   private config = {
@@ -57,7 +58,7 @@ export default class GraphClient {
     })
   }
 
-  public getMe() {
+  public getMe(): Promise<MicrosoftUser> {
     return new Promise((resolve, reject) => {
       this.getAccessToken()
         .then((accessToken) => {
