@@ -5,18 +5,18 @@ export default class GraphClient {
   private config = {
     auth: {
       clientId: 'd302c27c-4dba-42ae-8ac8-d595967e9e7d',
-      redirectUri: 'http://localhost:8080'
-    }
+      redirectUri: 'http://localhost:8080',
+    },
   }
 
   private userAgentApplication: UserAgentApplication
 
   private loginRequest = {
-    scopes: ['https://graph.microsoft.com/User.Read']
+    scopes: ['https://graph.microsoft.com/User.Read'],
   }
 
   private accessTokenRequest = {
-    scopes: ['user.read']
+    scopes: ['user.read'],
   }
 
   constructor() {
@@ -26,10 +26,10 @@ export default class GraphClient {
   public login() {
     return new Promise((resolve, reject) => {
       this.userAgentApplication.loginPopup(this.loginRequest)
-        .then(response => {
+        .then((response) => {
           resolve()
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error)
         })
     })
@@ -38,16 +38,16 @@ export default class GraphClient {
   public getAccessToken() {
     return new Promise((resolve, reject) => {
       this.userAgentApplication.acquireTokenSilent(this.accessTokenRequest)
-        .then(response => {
+        .then((response) => {
           resolve(response.accessToken)
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.errorMessage.indexOf('interaction_required') !== -1) {
             this.userAgentApplication.acquireTokenPopup(this.accessTokenRequest)
-              .then(response => {
+              .then((response) => {
                 resolve(response.accessToken)
               })
-              .catch(accessTokenError => {
+              .catch((accessTokenError) => {
                 reject(accessTokenError)
               })
           } else {
@@ -60,20 +60,20 @@ export default class GraphClient {
   public getMe() {
     return new Promise((resolve, reject) => {
       this.getAccessToken()
-        .then(accessToken => {
+        .then((accessToken) => {
           axios.get('https://graph.microsoft.com/v1.0/me', {
             headers: {
-              'Authorization': `Bearer ${accessToken}`
-            }
+              Authorization: `Bearer ${accessToken}`,
+            },
           })
-            .then(response => {
+            .then((response) => {
               resolve(response.data)
             })
-            .catch(error => {
+            .catch((error) => {
               reject(error)
             })
         })
-        .catch(error => {
+        .catch((error) => {
           reject(error)
         })
     })

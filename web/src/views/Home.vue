@@ -8,6 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import HelloWorld from '@/components/HelloWorld.vue'
 import GraphClient from '@/graph-client'
+import * as Sentry from '@sentry/browser'
 
 @Component({
   components: {
@@ -21,15 +22,14 @@ export default class Home extends Vue {
     graphClient.login()
       .then(() => {
         graphClient.getMe()
-          .then(me => {
-            console.log(me)
+          .then((me) => {
           })
-          .catch(error => {
-            console.error(error)
+          .catch((error) => {
+            Sentry.captureException(error)
           })
       })
-      .catch(error => {
-        console.error(error)
+      .catch((error) => {
+        Sentry.captureException(error)
       })
   }
 }

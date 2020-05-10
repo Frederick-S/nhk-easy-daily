@@ -12,8 +12,8 @@ Sentry.init({
   integrations: [new VueIntegration({
     Vue,
     attachProps: true,
-    logErrors: true
-  })]
+    logErrors: true,
+  })],
 })
 
 new Vue({
