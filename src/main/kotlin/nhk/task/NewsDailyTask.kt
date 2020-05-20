@@ -15,7 +15,7 @@ class NewsDailyTask {
     @Autowired
     lateinit var newsService: NewsService
 
-    @Scheduled(cron = "0 0 12 * * *")
+    @Scheduled(cron = "0 0 10 * * *")
     fun saveTopNews() {
         val now = ZonedDateTime.now()
 
