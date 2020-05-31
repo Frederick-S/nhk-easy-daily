@@ -24,9 +24,11 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes: 
       - nhk-db:/var/lib/mysql
+      - nhk-db-config:/etc/mysql/conf.d
     networks: 
       - nhk
 volumes: 
   nhk-db:
+  nhk-db-config:
 networks: 
   nhk:
