@@ -39,7 +39,7 @@ configurations {
 }
 
 dependencies {
-    compile 'io.sentry:sentry-logback:1.7.30'
+    compile 'io.sentry:sentry-logback:3.0.0'
     implementation 'mysql:mysql-connector-java:8.0.20'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'com.amazonaws:aws-java-sdk-ses:1.11.865'
