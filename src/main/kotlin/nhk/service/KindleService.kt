@@ -40,8 +40,8 @@ class KindleService {
 
         try {
             val client = AmazonSimpleEmailServiceClientBuilder.standard()
-                    .withRegion(Regions.US_WEST_2)
-                    .build()
+                .withRegion(Regions.US_WEST_2)
+                .build()
 
             val outputStream = ByteArrayOutputStream()
             message.writeTo(outputStream)
@@ -64,18 +64,22 @@ class KindleService {
     private fun buildMessage(news: News, mailFrom: String, mailTo: String): MimeMessage {
         val okHttpClient = OkHttpClient()
         val requestBody = FormBody.Builder()
-                .add("html", getMailHtml(news))
-                .add("format", "A6")
-                .build()
+            .add("html", getMailHtml(news))
+            .add("format", "A6")
+            .build()
         val request = Request.Builder()
-                .url("${html2PdfConfig.host}/pdfs")
-                .post(requestBody)
-                .build()
+            .url("${html2PdfConfig.host}/pdfs")
+            .post(requestBody)
+            .build()
         val call = okHttpClient.newCall(request)
         val response = call.execute()
 
         if (response.code != 201) {
-            logger.error("Failed to generate pdf from html, statusCode={}, body={}", response.code, response.body?.string())
+            logger.error(
+                "Failed to generate pdf from html, statusCode={}, body={}",
+                response.code,
+                response.body?.string()
+            )
 
             throw RuntimeException("Service unavailable")
         }
@@ -101,9 +105,9 @@ class KindleService {
     private fun getWordsHtml(words: Set<Word>): String {
         return words.joinToString(separator = "") { word ->
             val definitions = word.definitions
-                    .joinToString("") { definition ->
-                        "<li>${definition.definitionWithRuby}</li>"
-                    }
+                .joinToString("") { definition ->
+                    "<li>${definition.definitionWithRuby}</li>"
+                }
 
             """
                 <h3>${word.name}</h3>
@@ -154,6 +158,6 @@ class KindleService {
                         $wordsHtml
                     </body>
                 </html>
-            """.trimIndent()
+        """.trimIndent()
     }
 }
