@@ -45,7 +45,7 @@ repositories {
 
 dependencies {
     compile 'io.sentry:sentry-logback:1.7.30'
-    implementation 'mysql:mysql-connector-java:8.0.21'
+    implementation 'mysql:mysql-connector-java:8.0.25'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'com.amazonaws:aws-java-sdk-ses:1.11.923'
     implementation 'org.jsoup:jsoup:1.13.1'
