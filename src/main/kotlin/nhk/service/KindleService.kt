@@ -33,7 +33,7 @@ class KindleService {
     private val logger: Logger = LoggerFactory.getLogger(KindleService::class.java)
 
     @Autowired
-    lateinit var html2PdfConfig: Html2PdfConfig
+    private lateinit var html2PdfConfig: Html2PdfConfig
 
     fun sendToKindle(news: News, mailFrom: String, mailTo: String) {
         val message = buildMessage(news, mailFrom, mailTo)

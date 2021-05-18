@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired
 
 class KindleServiceTest : BaseTest() {
     @Autowired
-    lateinit var newsService: NewsService
+    private lateinit var newsService: NewsService
 
     @Autowired
-    lateinit var kindleService: KindleService
+    private lateinit var kindleService: KindleService
 
     @Autowired
-    lateinit var newsParser: NewsParser
+    private lateinit var newsParser: NewsParser
 
     @Test
     fun shouldSendNewsToKindle() {

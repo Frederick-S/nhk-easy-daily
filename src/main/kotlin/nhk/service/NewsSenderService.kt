@@ -12,10 +12,10 @@ class NewsSenderService {
     private val logger: Logger = LoggerFactory.getLogger(KindleService::class.java)
 
     @Autowired
-    lateinit var newsRepository: NewsRepository
+    private lateinit var newsRepository: NewsRepository
 
     @Autowired
-    lateinit var kindleService: KindleService
+    private lateinit var kindleService: KindleService
 
     fun sendToSubscribers(utcDate: ZonedDateTime) {
     }
