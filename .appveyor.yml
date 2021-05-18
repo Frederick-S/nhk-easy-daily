@@ -13,7 +13,6 @@ before_build:
 build_script:
   - gradlew.bat build
 before_test:
-  - gradlew.bat ktlint
   - cd web && yarn lint && yarn build
 test_script:
   - gradlew.bat test jacocoTestReport

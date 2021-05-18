@@ -35,7 +35,6 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
-      - run: gradle ktlint
       - run: gradle test jacocoTestReport
       - run: bash <(curl -s https://codecov.io/bash)
       - run: cd web && yarn && yarn lint && yarn build && yarn test:unit
